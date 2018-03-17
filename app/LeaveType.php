@@ -42,7 +42,7 @@ class LeaveType extends Model
     //Functions
     public static function getLeaveTypes($leave_type){
 
-        $result = LeaveType::where('short_code',$leave_type)->first();
+        $result = LeaveType::where('name',$leave_type)->first();
 
         return $result;
     }
@@ -65,7 +65,7 @@ class LeaveType extends Model
     }
 
     //Models
-    public static function leaveTypeInfo($id){
+    public static function info($id){
 
         $item = LeaveType::find($id);
 
@@ -76,16 +76,16 @@ class LeaveType extends Model
         ];
     }
 
-    public static function leaveTypeModel($item){
+    public static function model($item){
 
         return  [
-            'id'                => $item->id,
-            'name'              => $item->name,
-            'description'       => $item->description,
-            'created_at'        => Helpers::formatDate($item->created_at),
-            'updated_at'        => Helpers::formatDate($item->updated_at),
-            'created_by'        => User::userInformation($item->created_by),
-            'last_updated_by'   => ($item->last_updated_by != null && $item->last_updated_by != "") ? User::userInformation($item->last_updated_by) : null,
+            'id'          => $item->id,
+            'name'        => $item->name,
+            'description' => $item->description,
+            'created_at'  => Helpers::formatDate($item->created_at),
+            'updated_at'  => Helpers::formatDate($item->updated_at),
+            'created_by'  => User::info($item->created_by),
+            'updated_by'  => User::info($item->updated_by),
         ];
     }
 }

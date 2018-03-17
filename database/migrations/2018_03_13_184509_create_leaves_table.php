@@ -18,15 +18,22 @@ class CreateLeavesTable extends Migration
             $table->string('user_id')->nullable(true);
             $table->text('attachment')->nullable(true);
             $table->text('comments')->nullable(true);
-            $table->date('from_date')->default(\Carbon\Carbon::now());
-            $table->date('to_date')->default(\Carbon\Carbon::now());
-            $table->string('reason');
+            $table->date('last_day_of_work')->nullable(true);
+            $table->date('from_date')->nullable(true);
+            $table->date('to_date')->nullable(true);
+            $table->string('leave_type')->nullable(true);
+            $table->string('address_on_leave')->nullable(true);
+            $table->string('email_on_leave')->nullable(true);
+            $table->string('phone_on_leave')->nullable(true);
+            $table->string('processed_by')->nullable(true);
             $table->string('created_by')->nullable(true);
-            $table->string('last_updated_by')->nullable(true);
+            $table->string('updated_by')->nullable(true);
             $table->timestamps();
             $table->softDeletes();
 
             //Relationship
+            //$table->foreign('employee_id')->references('id')->on('users');
+            //$table->foreign('processed_by')->references('id')->on('users');
 
         });
     }

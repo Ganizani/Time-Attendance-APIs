@@ -8,12 +8,17 @@
 
 namespace App\Http\Controllers\User;
 ;
+
+use App\Address;
 use App\Http\Controllers\ApiController;
 use App\Login;
+use App\NextOfKin;
 use App\PasswordReset;
+use App\Spouse;
 use App\User;
 use Carbon\Carbon;
 use App\Http\Helpers;
+use Illuminate\Support\Facades\Auth;
 use Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -32,14 +37,13 @@ class UserController extends ApiController
      */
     public function index()
     {
+        $users  = [];
         $result = User::all();
-
-        $users = array();
-
         foreach($result as $item){
-            $users [] = User::userModel($item);
+            $users [] = User::model($item);
         }
 
+        //return
         return $this->showList(collect($users));
     }
 
@@ -51,41 +55,107 @@ class UserController extends ApiController
      */
     public function store(Request $request)
     {
+        //Validate User Info
         $validator = Validator::make($request->all(), User::createRules());
+        if ($validator->fails()) return $this->errorResponse($validator->errors(), 422);
 
-        if ($validator->fails()) {
-            return $this->errorResponse($validator->errors(), 422);
-        }
+        //Validate Address Info
+        $validator = Validator::make($request->address, Address::createRules());
+        if ($validator->fails()) return $this->errorResponse($validator->errors(), 422);
 
-        $regex = Helpers::PasswordRegex($request->password,  $request->password_confirmation);
+        //Validate Next of Kin Info
+        $validator = Validator::make($request->next_of_kin, NextOfKin::createRules());
+        if ($validator->fails()) return $this->errorResponse($validator->errors(), 422);
 
-        if($regex != ""){
-            return $this->errorResponse($regex,422);
-        }
+        //Validate Spouse Info
+        $validator = Validator::make($request->spouse, Spouse::createRules());
+        if ($validator->fails()) return $this->errorResponse($validator->errors(), 422);
+
+        //Insert Address
+        $address = new Address();
+        $address->house_no      = $request->address['house_no'];
+        $address->street_no     = $request->address['street_no'];
+        $address->street_name   = $request->address['street_name'];
+        $address->suburb        = $request->address['suburb'];
+        $address->city          = $request->address['city'];
+        $address->province      = $request->address['province'];
+        $address->country       = $request->address['country'];
+        $address->postal_code   = $request->address['postal_code'];
+        $address->created_at    = Carbon::now();
+        $address->created_by    = $request->created_by;
+        $address->updated_by    = null;
+        $address->updated_at    = null;
+        $address->save();
+
+        //Insert Next of Kin
+        $next_of_kin = new NextOfKin();
+        $next_of_kin->house_no      = $request->next_of_kin['house_no'];
+        $next_of_kin->street_no     = $request->next_of_kin['street_no'];
+        $next_of_kin->street_name   = $request->next_of_kin['street_name'];
+        $next_of_kin->suburb        = $request->next_of_kin['suburb'];
+        $next_of_kin->city          = $request->next_of_kin['city'];
+        $next_of_kin->province      = $request->next_of_kin['province'];
+        $next_of_kin->country       = $request->next_of_kin['country'];
+        $next_of_kin->postal_code   = $request->next_of_kin['postal_code'];
+        $next_of_kin->created_at    = Carbon::now();
+        $next_of_kin->created_by    = $request->created_by;
+        $next_of_kin->updated_by    = null;
+        $next_of_kin->updated_at    = null;
+        $next_of_kin->save();
+
+        //Insert Spouse
+        $spouse = new Spouse();
+        $spouse->name           = $request->spouse['name'];
+        $spouse->employer       = $request->spouse['employer'];
+        $spouse->work_location  = $request->spouse['work_location'];
+        $spouse->cell_phone     = $request->spouse['cell_phone'];
+        $spouse->work_phone     = $request->spouse['work_phone'];
+        $spouse->created_by     = $request->created_by;
+        $spouse->created_at     = Carbon::now();
+        $spouse->updated_at     = null;
+        $spouse->save();
 
         $user = new User();
-        $user->title              = $request->title;
-        $user->first_name         = $request->first_name;
-        $user->last_name          = $request->last_name;
-        $user->gender             = $request->gender;
-        $user->user_type          = $request->user_type;
-        $user->phone_number       = $request->phone_number;
-        $user->email              = $request->email;
-        $user->password           = User::encryptPassword($request->password);
-        $user->status             = User::ACTIVE;
-        $user->verified           = User::UNVERIFIED;
-        $user->created_at         = Carbon::now();
-        $user->verification_token = User::generateVerificationToken();
+        $user->employee_code        = $request->employee_code;
+        $user->title                = $request->title;
+        $user->first_name           = $request->first_name;
+        $user->maiden_name          = $request->maiden_name;
+        $user->middle_name          = $request->middle_name;
+        $user->preferred_name       = $request->preferred_name;
+        $user->id_number            = $request->id_number;
+        $user->nationality          = $request->nationality;
+        $user->supervisor           = $request->supervisor;
+        $user->gender               = $request->gender;
+        $user->user_type            = $request->user_type;
+        $user->phone_number         = $request->phone_number;
+        $user->email                = $request->email;
+        $user->nationality          = $request->nationality;
+        $user->supervisor           = $request->supervisor;
+        $user->marital_status       = $request->marital_status;
+        $user->department_id        = $request->department_id;
+        $user->work_cell_phone      = $request->work_cell_phone;
+        $user->work_phone           = $request->work_phone;
+        $user->work_location        = $request->work_location;
+        $user->start_date           = $request->start_date;
+        $user->job_title            = $request->job_title;
+        $user->work_email           = $request->work_email;
+        $user->home_phone           = $request->home_phone;
+        $user->work_email           = $request->work_email;
+        $user->address_id           = $address->id;
+        $user->spouse_id            = $spouse->id;
+        $user->next_of_kin_id       = $next_of_kin->id;
+        $user->profile_picture      = $request->profile_picture;
+        $user->password             = User::encryptPassword($request->password);
+        $user->status               = User::ACTIVE;
+        $user->verified             = User::UNVERIFIED;
+        $user->verification_token   = User::generateVerificationToken();
+        $user->created_at           = Carbon::now();
+        $user->created_by           = $request->created_by;
+        $user->updated_by           = null;
+        $user->updated_at           = null;
         $user->save();
-        //$user->notify(new UserRegistration());
 
-        //generate Access Token
-        //AccessToken::generateAccessToken($user_id);
-
-        //return user information
-        //return $this->showOne(collect(User::userModel($user)));
-
-        return $this->showOne($user, 201);
+        return $this->showList(collect(User::model($user)));
     }
 
     /**
@@ -96,7 +166,7 @@ class UserController extends ApiController
      */
     public function show($id)
     {
-        $user = User::userModel(User::where('id', $id)->firstOrFail());
+        $user = User::model(User::where('id', $id)->firstOrFail());
 
         return $this->showOne(collect($user));
     }
@@ -113,20 +183,8 @@ class UserController extends ApiController
         $user = User::where('id', $id)->firstOrFail();
 
         $validator = Validator::make($request->all(), User::updateRules($user->id));
+        if ($validator->fails()) return $this->errorResponse($validator->errors(), 400);
 
-        if ($validator->fails()) {
-            return $this->errorResponse($validator->errors(), 400);
-        }
-
-        if($request->has('email') && $user->email != $request->email){
-            $user->verified           = User::UNVERIFIED;
-            $user->verification_token = User::generateVerificationToken();
-            $user->email              = $request->email;
-        }
-
-        if($request->has('password')) {
-            $user->password = User::encryptPassword($request->password) ;
-        }
 
         $user->title        = $request->title;
         $user->first_name   = $request->first_name;
@@ -138,7 +196,7 @@ class UserController extends ApiController
             return $this->errorResponse('You need to specify a different value to update',422);
         }
         $user->updated_at      = Carbon::now();
-        $user->last_updated_by = isset($request->updated_by)? $request->updated_by : "";
+        $user->last_updated_by = $request->updated_by;
         $user->save();
 
         return $this->showOne($user,200);
@@ -180,29 +238,16 @@ class UserController extends ApiController
         $login->attempt_number = Login::getAttemptNumber($request->email);
 
         $validator = Validator::make($request->all(), User::loginRules());
+        if ($validator->fails()) return $this->errorResponse($validator->errors(), 400);
 
-        if ($validator->fails()) {
-            return $this->errorResponse($validator->errors(), 400);
+        if(Auth::attempt(['email' => $request->email, 'password' => $request->password])){
+            // Authentication passed...
+            $user = Auth::user();
+            $token =  $user->createToken('Ganizani - Time Attendance Password Grant Client')->accessToken;
+            return $this->showOne(collect(User::model($user, $token)));
         }
-
-        $email    = $request->email;
-        $password = User::encryptPassword($request->password);
-        $user     = User::where("email", $email)->where("password", $password)->where('status', User::ACTIVE)->first();
-
-        if ($user) {
-            $login->successful = 1;
-            $login->save();
-
-            //generate Access Token
-            //AccessToken::generateAccessToken($user->id);
-
-            //return user information
-            return $this->showOne(collect(User::userLoginModel($user)));
-        }
-        else {
-            $login->successful = 0;
-            $login->save();
-            return $this->errorResponse("Invalid Login Credentials", 400);
+        else{
+            return $this->errorResponse( "Invalid Login Credentials", 401);
         }
     }
 
@@ -235,16 +280,10 @@ class UserController extends ApiController
     public function resetPassword(Request $request) {
 
         $validator = Validator::make($request->all(), User::resetPasswordRules());
-
-        if ($validator->fails()) {
-            return $this->errorResponse($validator->errors(), 400);
-        }
+        if ($validator->fails()) return $this->errorResponse($validator->errors(), 400);
 
         $regex = Helpers::PasswordRegex($request->password, $request->password_confirmation);
-
-        if($regex != ""){
-            return $this->errorResponse($regex,400);
-        }
+        if($regex != "") return $this->errorResponse($regex,400);
 
         if(PasswordReset::isValidToken($request->token, $request->email) == "true") {
             $user           = User::where('email', $request->email)->firstOrFail();

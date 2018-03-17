@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateDevicesTable extends Migration
+class CreateNextOfKinsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,23 +13,24 @@ class CreateDevicesTable extends Migration
      */
     public function up()
     {
-        Schema::create('devices', function (Blueprint $table) {
+        Schema::create('next_of_kins', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('imei_number')->nullable(true);
-            $table->string('serial_number')->nullable(true);
-            $table->string('phone_number')->nullable(true);
-            $table->string('name')->nullable(true);
-            $table->string('supervisor')->nullable(true);
-            $table->string('status')->default(\App\Device::ACTIVE);
-            $table->string('department_id')->nullable(true);
+            $table->string('title')->nullable(true);
+            $table->string('first_name')->nullable(true);
+            $table->string('last_name')->nullable(true);
+            $table->string('middle_name')->nullable(true);
+            $table->string('email')->nullable(true);
+            $table->string('cell_phone')->nullable(true);
+            $table->string('home_phone')->nullable(true);
+            $table->string('relationship')->nullable(true);
+            $table->string('address_id')->nullable(true);
             $table->string('created_by')->nullable(true);
             $table->string('updated_by')->nullable(true);
             $table->timestamps();
             $table->softDeletes();
 
             //Relationships
-            //$table->foreign('department_id')->references('id')->on('departments');
-            //$table->foreign('supervisor')->references('id')->on('users');
+            //$table->foreign('address_id')->references('id')->on('addresses');
             //$table->foreign('created_by')->references('id')->on('users');
             //$table->foreign('updated_by')->references('id')->on('users');
         });
@@ -42,6 +43,6 @@ class CreateDevicesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('devices');
+        Schema::dropIfExists('next_of_kins');
     }
 }

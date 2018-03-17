@@ -27,15 +27,17 @@ class Device extends Model
      * @var array
      */
     protected $fillable = [
+        'name',
         'imei_number',
-        'device_name',
+        'phone_number',
         'supervisor',
-        'site_id',
         'status',
+        'department_id',
+        'serial_number',
         'created_at',
         'updated_at',
         'created_by',
-        'last_updated_by',
+        'updated_by',
     ];
 
     /**
@@ -57,56 +59,64 @@ class Device extends Model
     public static function createRules()
     {
         return [
-            'device_name'  => 'required|unique:devices,device_name',
-            'status'       => 'sometimes|nullable|in:' .Device::ACTIVE . ',' .Device::DEACTIVATED,
-            'company_id'   => 'required|exists:companies,id',
+            'name'          => 'required|unique:devices,name',
+            'imei_number'   => 'required|unique:devices,imei_number',
+            'serial_number' => 'required|unique:devices,serial_number',
+            'status'        => 'sometimes|nullable|in:' .Device::ACTIVE . ',' .Device::DEACTIVATED,
+            'department_id' => 'required|exists:departments,id',
+            'supervisor'    => 'required|exists:users,id',
         ];
     }
 
     public static function updateRules($id)
     {
         return [
-            'device_name'  => 'required|unique:devices,device_name',
-            'status'       => 'sometimes|nullable|in:' .Device::ACTIVE . ',' .Device::DEACTIVATED,
-            'company_id'   => 'required|exists:companies,id',
+            'name'          => 'required|unique:devices,name,'.$id,
+            'imei_number'   => 'required|unique:devices,imei_number,'.$id,
+            'serial_number' => 'required|unique:devices,serial_number,'.$id,
+            'status'        => 'sometimes|nullable|in:' .Device::ACTIVE . ',' .Device::DEACTIVATED,
+            'department_id' => 'required|exists:departments,id',
+            'supervisor'    => 'required|exists:users,id',
         ];
     }
 
 
     //Models
-    public static function deviceInformation($id){
+    public static function info($id){
 
-        $item = Device::where('id', $id)->first();
+        $item = Device::where('id', $id)->orWhere('imei_number', $id)->first();
 
         if(count($item) <= 0) return null;
 
         return  [
-            'id'                => $item->id,
-            'device_name'       => $item->device_name,
-            'phone_number'      => $item->phone_number,
-            'status'            => $item->status,
-            'last_sync'         => Helpers::formatDate(Device::deviceLastSync($item->id)),
-            'company'           => Company::companyInformation($item->company_id),
+            'id'            => $item->id,
+            'name'          => $item->name,
+            'imei_number'   => $item->imei_number,
+            'serial_number' => $item->serial_number,
+            'status'        => $item->status,
+            'phone_number'  => $item->phone_number,
+            'supervisor'    => User::info($item->supervisor),
+            'last_sync'     => Helpers::formatDate(Device::deviceLastSync($item->id)),
+            'department'    => Department::info($item->department_id)
         ];
-
     }
-    public static function deviceModel($item){
+
+    public static function model($item){
 
         return  [
-            'id'                => $item->id,
-            'imei_number'       => $item->imei_number,
-            'device_name'       => $item->device_name,
-            'status'            => $item->status,
-            'supervisor'        => $item->supervisor,
-            'serial_number'     => $item->serial_number,
-            'phone_number'      => $item->phone_number,
-            'allocation_date'   => Helpers::formatDate($item->allocation_date, "Y-m-d"),
-            'last_sync'         => Helpers::formatDate(Device::deviceLastSync($item->imei_number)),
-            'site'              => Site::siteInformation($item->site_id),
-            'created_at'        => Helpers::formatDate($item->created_at),
-            'updated_at'        => Helpers::formatDate($item->updated_at),
-            'created_by'        => User::userInformation($item->created_by),
-            'last_updated_by'  => ($item->last_updated_by != null && $item->last_updated_by != "") ? User::userInformation($item->last_updated_by) : null,
+            'id'            => $item->id,
+            'imei_number'   => $item->imei_number,
+            'name'          => $item->name,
+            'status'        => $item->status,
+            'serial_number' => $item->serial_number,
+            'phone_number'  => $item->phone_number,
+            'department'    => Department::info($item->department_id),
+            'supervisor'    => User::info($item->supervisor),
+            'last_sync'     => Helpers::formatDate(Device::deviceLastSync($item->id)),
+            'created_at'    => Helpers::formatDate($item->created_at),
+            'updated_at'    => Helpers::formatDate($item->updated_at),
+            'created_by'    => User::info($item->created_by),
+            'updated_by'    => User::info($item->updated_by)
         ];
     }
 }

@@ -28,7 +28,7 @@ class Record extends Model
         'time',
         'longitude',
         'latitude',
-        'device_id',
+        'imei_number',
         'created_at'
     ];
 
@@ -37,7 +37,7 @@ class Record extends Model
      *
      * @var array
      */
-    protected $hidden = [];
+    protected $hidden = ['deleted_at'];
 
     //Functions
     public static function countClockingByIdDate($date = "", $user_id = ""){
@@ -70,11 +70,11 @@ class Record extends Model
         return $records;
     }
 
-    public static function getRecordsInDateExcludeHoliday($from = "", $to = "", $company ="" ,$weekends = ""){
+    public static function getRecordsInDateExcludeHoliday($from = "", $to = "", $department ="" ,$weekends = ""){
 
         $query = "SELECT date 
                   FROM   records 
-                  WHERE  date BETWEEN '{$from}' AND '{$to}' AND date NOT IN (SELECT date FROM holidays WHERE company_id = '{$company}') AND date NOT IN ({$weekends})
+                  WHERE  date BETWEEN '{$from}' AND '{$to}' AND date NOT IN (SELECT date FROM holidays WHERE department_id = '{$department}') AND date NOT IN ({$weekends})
                   GROUP BY date ORDER BY date ASC";
 
         $records = DB::select($query);
@@ -89,7 +89,7 @@ class Record extends Model
 
         return [
             'user_id'     => 'required|exists:learners,id',
-            'device_id'   => 'required|exists:devices,id',
+            'imei_number' => 'sometimes|nullable|exists:devices,imei_number',
             'date'        => 'required|date_format:"Y-m-d"',
             'time'        => 'required|date_format:"H:s:i"',
             'latitude'    => 'required',
@@ -102,7 +102,7 @@ class Record extends Model
         return [
             'from_date'    => 'required|date_format:"Y-m-d"',
             'to_date'      => 'required|date_format:"Y-m-d"',
-            'company'      => 'sometimes|nullable|exists:companies,id',
+            'department'   => 'sometimes|nullable|exists:departments,id',
         ];
     }
 
@@ -111,7 +111,7 @@ class Record extends Model
         return [
             'from_date'  => 'required|date_format:"Y-m-d"',
             'to_date'    => 'required|date_format:"Y-m-d"',
-            'company'    => 'sometimes|nullable|exists:companies,id'
+            'department' => 'sometimes|nullable|exists:departments,id',
         ];
     }
 
@@ -120,7 +120,7 @@ class Record extends Model
         return [
             'from_date'  => 'required|date_format:"Y-m-d"',
             'to_date'    => 'required|date_format:"Y-m-d"',
-            'company'    => 'sometimes|nullable|exists:companies,id'
+            'department'   => 'sometimes|nullable|exists:departments,id',
         ];
     }
 
@@ -129,22 +129,13 @@ class Record extends Model
         return [
             'from_date'  => 'required|date_format:"Y-m-d"',
             'to_date'    => 'required|date_format:"Y-m-d"',
-            'company'    => 'sometimes|nullable|exists:companies,id',
-        ];
-    }
-
-    public static function stipendReportRules(){
-
-        return [
-            'from_date'  => 'required|date_format:"Y-m-d"',
-            'to_date'    => 'required|date_format:"Y-m-d"',
-            'company'    => 'sometimes|nullable|exists:companies,id'
+            'department'   => 'sometimes|nullable|exists:departments,id',
         ];
     }
 
 
     //Models
-    public static function recordInfo($item){
+    public static function info($item){
 
         return  [
             'id'            => $item->id,
@@ -153,14 +144,12 @@ class Record extends Model
             'latitude'      => $item->latitude,
             'longitude'     => $item->longitude,
             'status'        => $item->status,
-            'user_id'       => $item->user_id,
-            'device_id'     => $item->device_id,
-            'user'          => User::userInformation($item->user_id),
-            'device'        => Device::deviceInformation($item->device_id),
+            'user'          => User::info($item->user_id),
+            'device'        => Device::info($item->imei_number),
         ];
     }
 
-    public static function recordModel($item){
+    public static function model($item){
 
         return  [
             'id'            => $item->id,
@@ -169,10 +158,8 @@ class Record extends Model
             'latitude'      => $item->latitude,
             'longitude'     => $item->longitude,
             'status'        => $item->status,
-            'user_id'       => $item->user_id,
-            'device_id'     => $item->device_id,
-            'user'          => User::userInformation($item->user_id),
-            'device'        => Device::deviceInformation($item->device_id),
+            'user'          => User::info($item->user_id),
+            'device'        => Device::info($item->imei_number),
             'created_at'    => Helpers::formatDate($item->created_at),
         ];
     }

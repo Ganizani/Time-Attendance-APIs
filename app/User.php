@@ -8,11 +8,12 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
 use App\Http\Helpers;
+use Laravel\Passport\HasApiTokens;
 
 
 class User extends Authenticatable
 {
-    use Notifiable, SoftDeletes;
+    use HasApiTokens ,Notifiable, SoftDeletes;
 
     const VERIFIED          = 'VERIFIED';
     const UNVERIFIED        = 'UNVERIFIED';
@@ -31,27 +32,42 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
+        'employee_code',
         'title',
+        'id_number',
+        'nationality',
         'first_name',
         'last_name',
+        'maiden_name',
+        'middle_name',
+        'preferred_name',
         'user_type',
-        'department',
-        'employee_code',
+        'department_id',
+        'marital_status',
+        'supervisor',
+        'nationality',
         'email',
         'gender',
         'status',
         'phone_number',
-        'alt_phone_number',
+        'work_cell_phone',
+        'work_phone',
+        'work_location',
+        'start_date',
+        'job_title',
+        'work_email',
+        'home_phone',
         'verified',
         'verification_token',
         'profile_picture',
-        'address_id',
-        'company_id',
         'password',
+        'spouse_id',
+        'address_id',
+        'next_of_kin_id',
         'created_at',
         'updated_at',
         'created_by',
-        'last_updated_by',
+        'updated_by',
     ];
 
     /**
@@ -65,8 +81,7 @@ class User extends Authenticatable
 
     //Functions
     public static function encryptPassword($password){
-
-        return hash('sha256', $password);
+        return bcrypt($password);
     }
 
     public static function generateVerificationToken(){
@@ -162,7 +177,7 @@ class User extends Authenticatable
     }
 
     //Models
-    public static function userInformation($id){
+    public static function info($id){
 
         $item = User::where('id', $id)->first();
 
@@ -171,64 +186,81 @@ class User extends Authenticatable
         return [
             'id'                   => $item->id,
             'employee_code'        => $item->employee_code,
+            'id_number'            => $item->id_number,
+            'nationality'          => $item->nationality,
             'title'                => $item->title,
             'first_name'           => $item->first_name,
             'last_name'            => $item->last_name,
-            'name'                 => $item->title." ".$item->first_name. " ". $item->last_name,
-            'department'           => $item->department,
-            'gender'               => $item->gender,
-            'phone_number'         => $item->phone_number,
-            'user_type'            => $item->user_type,
-            'user_type_name'       => User::getUserTypeName($item->user_type),
-            'verified'             => $item->verified,
-            'email'                => $item->email,
-            'profile_picture'      => $item->profile_picture
-        ];
-    }
-
-    public static function userModel($item){
-
-        return  [
-            'id'                   => $item->id,
-            'title'                => $item->title,
-            'first_name'           => $item->first_name,
-            'last_name'            => $item->last_name,
+            'maiden_name'          => $item->maiden_name,
+            'middle_name'          => $item->middle_name,
+            'preferred_name'       => $item->preferred_name,
+            'marital_status'       => $item->marital_status,
             'name'                 => $item->title." ".$item->first_name. " ". $item->last_name,
             'gender'               => $item->gender,
             'phone_number'         => $item->phone_number,
             'user_type'            => $item->user_type,
-            'company'              => Company::companyInformation($item->company_id),
-            'user_type_name'       => User::getUserTypeName($item->user_type),
-            'verified'             => $item->verified,
             'email'                => $item->email,
             'status'               => $item->status,
-            'created_by'           => User::userInformation($item->created_by),
-            'created_at'           => Helpers::formatDate($item->created_at),
-            'updated_at'           => Helpers::formatDate($item->updated_at),
+            'department_id'        => $item->department_id,
+            'work_cell_phone'      => $item->work_cell_phone,
+            'work_phone'           => $item->work_phone,
+            'work_location'        => $item->work_location,
+            'start_date'           => Helpers::formatDate($item->start_date, "Y-m-d"),
+            'job_title'            => $item->job_title,
+            'work_email'           => $item->work_email,
+            'home_phone'           => $item->home_phone,
+            'verified'             => $item->verified,
+            'next_of_kin'          => NextOfKin::info($item->next_of_kin_id),
+            'address'              => Address::info($item->address_id),
+            'spouse_id'            => Spouse::info($item->spouse_id),
+            'supervisor'           => User::info($item->supervisor_id),
+            'department'           => Department::info($item->department_id),
+            'user_type_name'       => User::getUserTypeName($item->user_type),
             'profile_picture'      => $item->profile_picture,
         ];
     }
 
-    public static function userLoginModel($item){
+    public static function model($item, $token = ""){
 
         return  [
             'id'                   => $item->id,
+            'employee_code'        => $item->employee_code,
+            'id_number'            => $item->id_number,
+            'nationality'          => $item->nationality,
             'title'                => $item->title,
             'first_name'           => $item->first_name,
             'last_name'            => $item->last_name,
+            'maiden_name'          => $item->maiden_name,
+            'middle_name'          => $item->middle_name,
+            'preferred_name'       => $item->preferred_name,
+            'marital_status'       => $item->marital_status,
             'name'                 => $item->title." ".$item->first_name. " ". $item->last_name,
             'gender'               => $item->gender,
             'phone_number'         => $item->phone_number,
             'user_type'            => $item->user_type,
-            'user_type_name'       => User::getUserTypeName($item->user_type),
-            'verified'             => $item->verified,
             'email'                => $item->email,
             'status'               => $item->status,
-            'access_token'         => AccessToken::getAccessToken($item->id),
-            'created_by'           => User::userInformation($item->created_by),
-            'created_at'           => Helpers::formatDate($item->created_at),
-            'updated_at'           => Helpers::formatDate($item->updated_at),
+            'department_id'        => $item->department_id,
+            'work_cell_phone'      => $item->work_cell_phone,
+            'work_phone'           => $item->work_phone,
+            'work_location'        => $item->work_location,
+            'start_date'           => Helpers::formatDate($item->start_date, "Y-m-d"),
+            'job_title'            => $item->job_title,
+            'work_email'           => $item->work_email,
+            'home_phone'           => $item->home_phone,
+            'verified'             => $item->verified,
+            'next_of_kin'          => NextOfKin::info($item->next_of_kin_id),
+            'address'              => Address::info($item->address_id),
+            'spouse_id'            => Spouse::info($item->spouse_id),
+            'supervisor'           => User::info($item->supervisor_id),
+            'department'           => Department::info($item->department_id),
+            'user_type_name'       => User::getUserTypeName($item->user_type),
             'profile_picture'      => $item->profile_picture,
+            'token'                => $token,
+            'created_by'           => User::info($item->created_by),
+            'created_at'           => Helpers::formatDate($item->created_at),
+            'updated_by'           => User::info($item->updated_by),
+            'updated_at'           => Helpers::formatDate($item->updated_at),
         ];
     }
 }

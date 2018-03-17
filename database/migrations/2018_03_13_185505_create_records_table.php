@@ -15,13 +15,13 @@ class CreateRecordsTable extends Migration
     {
         Schema::create('records', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('user_id')->nullable(true);
+            $table->string('employee_id')->nullable(true);
             $table->date('date')->nullable(true);
             $table->time('time')->nullable(true);
             $table->string('status')->nullable(true);
             $table->string('latitude')->default('0');
             $table->string('longitude')->default('0');
-            $table->string('device_id')->nullable(true);
+            $table->string('imei_number')->nullable(true);
             $table->timestamps();
             $table->softDeletes();
 

@@ -30,11 +30,11 @@ class Holiday extends Model
         'name',
         'description',
         'date',
-        'company_id',
+        'department_id',
         'created_at',
         'updated_at',
         'created_by',
-        'last_updated_by',
+        'updated_by',
     ];
 
     /**
@@ -45,26 +45,27 @@ class Holiday extends Model
     protected $hidden = [];
 
     //Functions
-    public static function isHoliday($date, $site){
+    public static function isHoliday($date, $department){
         $count = Holiday::where('date', $date)
-            ->where('site_id', $site)
+            ->where('department_id', $department)
             ->count();
+
         if($count > 0) $val = true;
         else $val = false;
 
         return $val;
     }
 
-    public static function getMonthlyHolidays($date, $site = ""){
+    public static function getMonthlyHolidays($date, $department = ""){
         $data = [];
 
         $result = Holiday::whereMonth('date','=', date('m', strtotime($date)))
             ->whereYear('date','=', date('Y', strtotime($date)))
-            ->where('site_id', $site)
+            ->where('department_id', $department)
             ->get();
 
         foreach ($result as $item){
-            $data [] = Holiday::holidayModel($item);
+            $data [] = Holiday::model($item);
         }
 
         return collect($data);
@@ -74,44 +75,34 @@ class Holiday extends Model
     public static function createRules(){
 
         return [
-            'date'     => 'required|date',
-            'company'  => 'required|exists:companies,id',
-            'site'     => 'required|exists:sites,id',
-        ];
-    }
-
-    public static function uploadRules(){
-
-        return [
-            'date'       => 'required|date|date_format:"Y-m-d"',
-            'company'    => 'required|exists:companies,name',
-            'site'       => 'required|exists:sites,name',
+            'name'        => 'required',
+            'date'        => 'required|date|date_format:"Y-m-d"',
+            'department'  => 'required|exists:departments,id',
         ];
     }
 
     public static function updateRules(){
 
         return [
-            'date'       => 'required|date|date_format:"Y-m-d"',
-            'company'    => 'required|exists:companies,id',
-            'site'       => 'required|exists:sites,id',
+            'name'        => 'required',
+            'date'        => 'required|date|date_format:"Y-m-d"',
+            'department'  => 'required|exists:departments,id',
         ];
     }
 
     //Models
-    public static function holidayModel($item){
+    public static function model($item){
 
         return  [
-            'id'                => $item->id,
-            'name'              => $item->name,
-            'date'              => Helpers::formatDate($item->date, "Y-m-d"),
-            'description'       => $item->description,
-            'company'           => Company::companyInformation($item->company_id),
-            'site'              => Site::siteInformation($item->site_id),
-            'created_at'        => Helpers::formatDate($item->created_at),
-            'updated_at'        => ($item->updated_at != null)? Helpers::formatDate($item->updated_at) : null,
-            'created_by'        => User::userInformation($item->created_by),
-            'last_updated_by'  => ($item->last_updated_by != null && $item->last_updated_by != "") ? User::userInformation($item->last_updated_by) : null,
+            'id'         => $item->id,
+            'name'       => $item->name,
+            'date'       => Helpers::formatDate($item->date, "Y-m-d"),
+            'description'=> $item->description,
+            'department' => Department::info($item->department_id),
+            'created_at' => Helpers::formatDate($item->created_at),
+            'updated_at' => Helpers::formatDate($item->updated_at),
+            'created_by' => User::info($item->created_by),
+            'updated_by' => User::info($item->updated_by),
         ];
     }
 }

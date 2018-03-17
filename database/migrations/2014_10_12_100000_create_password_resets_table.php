@@ -22,6 +22,7 @@ class CreatePasswordResetsTable extends Migration
             $table->softDeletes();
 
             //Relationships
+            //$table->foreign('email')->references('id')->on('users');
         });
     }
 
