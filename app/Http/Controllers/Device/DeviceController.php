@@ -29,9 +29,7 @@ class DeviceController extends ApiController
     public function index()
     {
         $devices = array();
-
         $result = Device::all();
-
         foreach($result as $item){
             $devices [] = Device::model($item);
         }
@@ -78,9 +76,9 @@ class DeviceController extends ApiController
      */
     public function show($id)
     {
-        $device = Device::model(Device::where('id', $id)->firstOrFail());
+        $device = Device::where('id', $id)->firstOrFail();
 
-        return $this->showOne(collect($device));
+        return $this->showOne(collect(Device::model($device)));
     }
 
     /**

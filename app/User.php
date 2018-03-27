@@ -80,6 +80,15 @@ class User extends Authenticatable
     ];
 
     //Functions
+    public static function getUsers($department = "", $from = "", $to = ""){
+
+        $users = DB::table('users');
+        if($department != "") $users->where('department_id', $department);
+        if($from != "" && $to != "") $users->whereBetween('created_at', [$from, $to]);
+
+        return $users->get();
+    }
+
     public static function encryptPassword($password){
         return bcrypt($password);
     }
@@ -215,9 +224,9 @@ class User extends Authenticatable
             'spouse_id'            => Spouse::info($item->spouse_id),
             'supervisor'           => User::info($item->supervisor_id),
             'department'           => Department::info($item->department_id),
-            'user_type_name'       => User::getUserTypeName($item->user_type),
             'profile_picture'      => $item->profile_picture,
         ];
+        //'user_type_name'       => User::getUserTypeName($item->user_type),
     }
 
     public static function model($item, $token = ""){
@@ -254,7 +263,6 @@ class User extends Authenticatable
             'spouse_id'            => Spouse::info($item->spouse_id),
             'supervisor'           => User::info($item->supervisor_id),
             'department'           => Department::info($item->department_id),
-            'user_type_name'       => User::getUserTypeName($item->user_type),
             'profile_picture'      => $item->profile_picture,
             'token'                => $token,
             'created_by'           => User::info($item->created_by),
@@ -262,6 +270,7 @@ class User extends Authenticatable
             'updated_by'           => User::info($item->updated_by),
             'updated_at'           => Helpers::formatDate($item->updated_at),
         ];
+        // 'user_type_name'       => User::getUserTypeName($item->user_type),
     }
 }
 

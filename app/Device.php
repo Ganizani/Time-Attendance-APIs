@@ -50,7 +50,7 @@ class Device extends Model
     //Functions
     public static function deviceLastSync($id){
 
-        $items = Record::where('device_id', $id)->latest()->first();
+        $items = Record::where('imei_number', $id)->latest()->first();
 
         return  isset($items->created_at)? $items->created_at : null;
     }
@@ -112,7 +112,7 @@ class Device extends Model
             'phone_number'  => $item->phone_number,
             'department'    => Department::info($item->department_id),
             'supervisor'    => User::info($item->supervisor),
-            'last_sync'     => Helpers::formatDate(Device::deviceLastSync($item->id)),
+            'last_sync'     => Helpers::formatDate(Device::deviceLastSync($item->imei_number)),
             'created_at'    => Helpers::formatDate($item->created_at),
             'updated_at'    => Helpers::formatDate($item->updated_at),
             'created_by'    => User::info($item->created_by),

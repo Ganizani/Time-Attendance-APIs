@@ -15,7 +15,7 @@ class CreateRecordsTable extends Migration
     {
         Schema::create('records', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('employee_id')->nullable(true);
+            $table->string('user_id')->nullable(true);
             $table->date('date')->nullable(true);
             $table->time('time')->nullable(true);
             $table->string('status')->nullable(true);

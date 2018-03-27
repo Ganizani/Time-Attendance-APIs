@@ -45,6 +45,13 @@ class Department extends Model
         return User::where('department_id', $id)->count();
     }
 
+    public static function deviceCount($id){
+
+        return Device::where('department_id', $id)->count();
+    }
+
+
+
     public static function departmentHolidays($id)
     {
         $holidays = [];
@@ -80,7 +87,7 @@ class Department extends Model
     public static function createRules(){
 
         return [
-            'name'          => 'required|unique:devices,name',
+            'name'          => 'required|unique:departments,name',
             'description'   => 'sometimes|nullable',
             'location'      => 'sometimes|nullable',
         ];
@@ -89,7 +96,7 @@ class Department extends Model
     public static function updateRules($id){
 
         return [
-            'name'          => 'required|unique:devices,name,'.$id,
+            'name'          => 'required|unique:departments,name,'.$id,
             'description'   => 'sometimes|nullable',
             'location'      => 'sometimes|nullable',
         ];
@@ -107,7 +114,6 @@ class Department extends Model
             'name'        => $item->name,
             'description' => $item->description,
             'location'    => $item->location,
-            'employees'   => Department::employeeCount($item->id)
         ];
     }
 
@@ -119,6 +125,7 @@ class Department extends Model
             'description'  => $item->description,
             'location'     => $item->location,
             'employees'    => Department::employeeCount($item->id),
+            'devices'      => Department::deviceCount($item->id),
             'created_at'   => Helpers::formatDate($item->created_at),
             'updated_at'   => Helpers::formatDate($item->updated_at),
             'created_by'   => User::info($item->created_by),

@@ -19,8 +19,7 @@ class ReportLog extends Model
         'report_name',
         'from_date',
         'to_date',
-        'company_id',
-        'site_id',
+        'department_id',
         'user_id',
     ];
 }

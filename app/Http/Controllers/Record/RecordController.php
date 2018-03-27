@@ -46,15 +46,9 @@ class RecordController extends ApiController
             $WHEREDepartment = " AND u.department_id = '$request->department'";
         }
 
-        //Recently Added
-        $ORDERBY = "";
-        if(isset($request->recently) && $request->recently == "true"){
-            $ORDERBY = "ORDER BY r.time DESC LIMIT 20";
-        }
         $results = DB::select("SELECT r.*
                                FROM   records r, users u
-                               WHERE  r.user_id = u.id AND date BETWEEN '$from' AND '$to' {$WHEREDepartment}
-                               {$ORDERBY}");
+                               WHERE  r.user_id = u.id AND date BETWEEN '$from' AND '$to' {$WHEREDepartment}");
 
         foreach($results as $item){
             $records [] = Record::model($item);
@@ -62,6 +56,31 @@ class RecordController extends ApiController
 
         return $this->showList(collect($records));
     }
+
+    /**
+     * Show Recently added records
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function recently(Request $request)
+    {
+        $records = [];
+        $today = date("Y-m-d");
+        $results = DB::select("SELECT r.*
+                               FROM   records r
+                               WHERE  date = '$today'
+                               ORDER BY r.time DESC LIMIT 20");
+
+        foreach($results as $item){
+            $records [] = Record::model($item);
+        }
+
+        //return
+        return $this->showList(collect($records));
+    }
+
+
 
     /**
      * Store a newly created resource in storage.
