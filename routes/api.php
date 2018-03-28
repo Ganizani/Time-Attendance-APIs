@@ -70,5 +70,5 @@ Route::post('records/', 'Record\RecordController@store')->middleware('auth:api')
 Route::post('reports/absentee', 'Report\ReportController@absentee')->middleware('auth:api');
 Route::post('reports/attendance','Report\ReportController@attendance')->middleware('auth:api');
 Route::post('reports/base', 'Report\ReportController@base')->middleware('auth:api');
-Route::post('reports/leaves', 'Report\ReportController@leave')->middleware('auth:api');
+Route::post('reports/leave', 'Report\ReportController@leave')->middleware('auth:api');
 Route::post('reports/map', 'Report\ReportController@map')->middleware('auth:api');

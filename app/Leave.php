@@ -7,6 +7,7 @@
  */
 
 namespace App;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Http\Helpers;
@@ -112,7 +113,8 @@ class Leave extends Model
 
     //Models
     public static function model($item){
-
+       $to = Carbon::parse($item->to_date);
+       $from =  Carbon::parse($item->from_date);
         return  [
             'id'                => $item->id,
             'user_id'           => $item->user_id,
@@ -124,7 +126,8 @@ class Leave extends Model
             'last_day_of_work'  => Helpers::formatDate($item->last_day_of_work, "Y-m-d"),
             'from_date'         => Helpers::formatDate($item->from_date, "Y-m-d"),
             'to_date'           => Helpers::formatDate($item->to_date, "Y-m-d"),
-            'leave_type'        => LeaveType::leaveTypeInfo($item->leave_type),
+            'leave_type'        => $item->leave_type,
+            'leave_days'        => $from->diffInDays($to),
             'user'              => User::info($item->user_id),
             'created_at'        => Helpers::formatDate($item->created_at),
             'updated_at'        => Helpers::formatDate($item->updated_at),
