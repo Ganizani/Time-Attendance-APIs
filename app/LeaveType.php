@@ -70,9 +70,9 @@ class LeaveType extends Model
         $item = LeaveType::find($id);
 
         return  [
-            'id'                => $item->id,
-            'name'              => $item->name,
-            'description'       => $item->description,
+            'id'           => $item->id,
+            'name'         => $item->name,
+            'description'  => $item->description,
         ];
     }
 

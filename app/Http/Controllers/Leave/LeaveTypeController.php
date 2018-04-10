@@ -53,9 +53,8 @@ class LeaveTypeController extends ApiController
         $leave_type = new LeaveType();
         $leave_type->name             = $request->name;
         $leave_type->description      = $request->description;
-        $leave_type->created_by       = $request->created_by ;
+        $leave_type->created_by       = $request->user()->id ;
         $leave_type->created_at       = Carbon::now();
-        $leave_type->updated_at       = null;
         $leave_type->save();
 
         //return
@@ -94,11 +93,11 @@ class LeaveTypeController extends ApiController
 
         $leave_type->name             = $request->name;
         $leave_type->description      = $request->description;
-
         if($leave_type->isClean()){ //if the site has not changed
             return $this->errorResponse('You need to specify a different value to update',400);
         }
-        $leave_type->updated_by = $request->updated_by;
+
+        $leave_type->updated_by = $request->user()->id;
         $leave_type->updated_at = Carbon::now();
         $leave_type->save();
 

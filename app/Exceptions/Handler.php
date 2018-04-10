@@ -87,6 +87,24 @@ class Handler extends ExceptionHandler
             return $this->errorResponse($message, $code);
         }
 
+        if($exception instanceof \ReflectionException){
+            $message = "The Class or Controller Not Found.";//$exception->getMessage();
+            $code    = 500;
+
+            return $this->errorResponse($message, $code);
+        }
+
+        if($exception instanceof \ErrorException1){
+            $message = $exception->getMessage();
+            $code    = 404;
+
+            return $this->errorResponse($message, $code);
+        }
+
+
+
+
+
         //Code for Handling any METHOD NOT FOUND HTTP Exception
         if($exception instanceof MethodNotAllowedHttpException){
 

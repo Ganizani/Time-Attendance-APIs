@@ -48,8 +48,8 @@ class DatabaseSeeder extends Seeder
         //Faker
         $faker = new Faker();
         //Data
-        $dates       = ['2018-03-01', '2018-03-02', '2018-03-05', '2018-03-06', '2018-03-07', '2018-03-08', '2018-03-09',
-                        '2018-03-12', '2018-03-13', '2018-03-14','2018-03-15','2018-03-16','2018-03-19', '2018-03-20'];
+        $dates       = ['2018-04-01', '2018-04-02', '2018-04-03', '2018-04-04', '2018-04-05', '2018-04-06', '2018-04-07',
+                        '2018-04-08', '2018-04-09', '2018-04-10'];
         $leave_types = ['Absent Leave','Annual Leave','Sick Leave', 'Family Responsibility Leave',
                         'Maternity Leave', 'Special Unpaid Leave', 'Absent With Permission Leave',
                         'Injury On Duty Leave', 'Study Leave', 'Suspended With Pay Leave', 'Other',
@@ -119,6 +119,7 @@ class DatabaseSeeder extends Seeder
                     'imei_number'   => $device->imei_number,
                     'latitude'      => "0.0",
                     'longitude'     => "0.0",
+                    'created_at'    => Carbon::now()
                 ]);
 
                 //OUT
@@ -130,6 +131,7 @@ class DatabaseSeeder extends Seeder
                     'imei_number'   => $device->imei_number,
                     'latitude'      => "0.0",
                     'longitude'     => "0.0",
+                    'created_at'    => Carbon::now()
                 ]);
             }
         }

@@ -50,9 +50,9 @@ class Device extends Model
     //Functions
     public static function deviceLastSync($id){
 
-        $items = Record::where('imei_number', $id)->latest()->first();
+        $items = Record::where('imei_number', $id)->orderBy('id', 'desc')->first();
 
-        return  isset($items->created_at)? $items->created_at : null;
+        return isset($items->created_at) ? $items->created_at : null;
     }
 
     //Rules

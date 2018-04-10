@@ -10,6 +10,7 @@ namespace App\Http\Controllers\Device;
 use App\Device;
 use App\Http\Controllers\ApiController;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 use Validator;
 use Illuminate\Http\Request;
 
@@ -24,12 +25,23 @@ class DeviceController extends ApiController
     /**
      * Display a listing of the resource.
      *
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         $devices = array();
-        $result = Device::all();
+        $WHEREDepartment = "";
+        if(isset($request->department) && $request->department != ""){
+            $WHEREDepartment = " AND d.department_id = {$request->department}";
+        }
+        $query = "SELECT d.* 
+                  FROM   devices d
+                  WHERE  d.deleted_at IS NULL {$WHEREDepartment}";
+
+        //die($query);
+
+        $result = DB::select($query);
         foreach($result as $item){
             $devices [] = Device::model($item);
         }

@@ -26,6 +26,7 @@ class RecordController extends ApiController
     /**
      * Display a listing of the resource.
      *
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request)
@@ -66,10 +67,16 @@ class RecordController extends ApiController
     public function recently(Request $request)
     {
         $records = [];
-        $today = date("Y-m-d");
+        $today   = date("Y-m-d");
+
+        $WHEREDepartment = "";
+        if(isset($request->department) && $request->department != ""){
+            $WHEREDepartment = " AND u.department_id = '$request->department'";
+        }
+
         $results = DB::select("SELECT r.*
-                               FROM   records r
-                               WHERE  date = '$today'
+                               FROM   records r, users u
+                               WHERE  r.user_id = u.id AND r.date = '$today' {$WHEREDepartment}
                                ORDER BY r.time DESC LIMIT 20");
 
         foreach($results as $item){

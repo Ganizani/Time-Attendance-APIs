@@ -35,7 +35,7 @@ $factory->define(User::class, function (Faker $faker) {
         'preferred_name'     => $faker->randomElement([$faker->lastName(), '']),
         'id_number'          => str_random(13),
         'nationality'        => $faker->country(),
-        'marital_status'     => $faker->randomElement(['Single', 'Married', 'Widow']),
+        'marital_status'     => $faker->randomElement(['Single', 'Married', 'Widowed']),
         'supervisor'         => '',
         'work_phone'         => '',
         'work_cell_phone'    => '',

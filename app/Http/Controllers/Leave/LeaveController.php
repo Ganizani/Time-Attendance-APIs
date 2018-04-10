@@ -54,7 +54,7 @@ class LeaveController extends ApiController
         }
 
         $leave = new Leave();
-        $leave->user_id           = $request->user_id;
+        $leave->user_id           = $request->user;
         $leave->attachment        = $request->attachment;
         $leave->last_day_of_work  = $request->last_day_of_work;
         $leave->from_date         = $request->from_date;
@@ -64,7 +64,8 @@ class LeaveController extends ApiController
         $leave->address_on_leave  = $request->address_on_leave;
         $leave->email_on_leave    = $request->email_on_leave;
         $leave->phone_on_leave    = $request->phone_on_leave;
-        $leave->processed_by      = $request->processed_by;
+        $leave->processed_by      = $request->user()->id;
+        $leave->created_by        = $request->user()->id;
         $leave->created_at        = Carbon::now();
         $leave->updated_at        = null;
         $leave->save();
@@ -112,12 +113,11 @@ class LeaveController extends ApiController
         $leave->address_on_leave  = $request->address_on_leave;
         $leave->email_on_leave    = $request->email_on_leave;
         $leave->phone_on_leave    = $request->phone_on_leave;
-        $leave->processed_by      = $request->processed_by;
 
         if($leave->isClean()){ //if the site has not changed
             return $this->errorResponse('You need to specify a different value to update',400);
         }
-        $leave->updated_by = $request->updated_by;
+        $leave->updated_by = $request->user()->id;
         $leave->updated_at = Carbon::now();
         $leave->save();
 

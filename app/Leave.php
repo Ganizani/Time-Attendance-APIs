@@ -11,6 +11,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Http\Helpers;
+use Illuminate\Support\Facades\DB;
 
 class Leave extends Model
 {
@@ -51,12 +52,13 @@ class Leave extends Model
     //Functions
     public static function getLeaveByIdDate($user_id, $date){
 
-        $result = Leave::where('user_id',$user_id)
-            ->where('from_date', '>=', $date)
-            ->where('to_date', '<=', $date)
-            ->get();
+        $query = "SELECT l.* 
+                  FROM   leaves l
+                  WHERE  l.deleted_at IS NULL AND l.user_id = '{$user_id}' AND '{$date}' BETWEEN l.from_date AND l.to_date";
 
-        return $result;
+        $result = DB::select($query);
+
+        return (count($result) > 0) ? $result[0] : null;
     }
 
     public static function getLeaveTypes($leave_type){
@@ -71,7 +73,7 @@ class Leave extends Model
     public static function createRules(){
 
         return [
-            'user_id'          => 'required|exists:users,id',
+            'user'             => 'required|exists:users,id',
             'from_date'        => 'required|date|date_format:"Y-m-d"',
             'to_date'          => 'required|date|date_format:"Y-m-d"',
             'leave_type'       => 'required|exists:leave_types,id',
@@ -87,7 +89,7 @@ class Leave extends Model
     public static function updateRules($id){
 
         return [
-            'user_id'          => 'required|exists:users,id',
+            'user'             => 'required|exists:users,id',
             'from_date'        => 'required|date|date_format:"Y-m-d"',
             'to_date'          => 'required|date|date_format:"Y-m-d"',
             'leave_type'       => 'required|exists:leave_types,id',
@@ -126,7 +128,7 @@ class Leave extends Model
             'last_day_of_work'  => Helpers::formatDate($item->last_day_of_work, "Y-m-d"),
             'from_date'         => Helpers::formatDate($item->from_date, "Y-m-d"),
             'to_date'           => Helpers::formatDate($item->to_date, "Y-m-d"),
-            'leave_type'        => $item->leave_type,
+            'leave_type'        => LeaveType::info($item->leave_type),
             'leave_days'        => $from->diffInDays($to),
             'user'              => User::info($item->user_id),
             'created_at'        => Helpers::formatDate($item->created_at),

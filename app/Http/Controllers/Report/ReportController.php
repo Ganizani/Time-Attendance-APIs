@@ -67,6 +67,7 @@ class ReportController extends ApiController
                     $reason = null;
                     if(count($leave_data) > 0){
                         $reason = LeaveType::info($leave_data->leave_type);
+                        $reason = $reason['name'];
                     }
 
                     $data [] = [
@@ -182,7 +183,7 @@ class ReportController extends ApiController
 
         $WHEREDepartment = $WHERELeaveType =  "";
         if(isset($request->department) && $request->department != "") $WHEREDepartment = " AND u.department_id = '$request->department'";
-        if(isset($request->reason) && $request->reason != "") $WHEREReason = " AND le.leave_type = '$request->reason'";
+        if(isset($request->leave_type) && $request->leave_type != "") $WHERELeaveType = " AND le.leave_type = '$request->leave_type'";
 
         $results = DB::select("SELECT le.*
                                FROM   leaves le, users u

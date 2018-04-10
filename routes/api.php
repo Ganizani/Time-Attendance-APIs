@@ -14,7 +14,11 @@ use Illuminate\Http\Request;
 */
 
 /* User */
+Route::get('users/leave', 'User\UserController@leave_count')->middleware('auth:api');
+Route::get('users/absent', 'User\UserController@absent_count')->middleware('auth:api');
+Route::get('users/active', 'User\UserController@active_count')->middleware('auth:api');
 Route::get('users/', 'User\UserController@index')->middleware('auth:api');
+Route::get('users/recently', 'User\UserController@recently')->middleware('auth:api');
 Route::get('users/{id}','User\UserController@show')->middleware('auth:api');
 Route::post('users/', 'User\UserController@store')->middleware('auth:api');
 Route::put('users/{id}', 'User\UserController@update')->middleware('auth:api');
@@ -54,11 +58,11 @@ Route::put('leaves/{id}', 'Leave\LeaveController@update')->middleware('auth:api'
 Route::delete('leaves/{id}', 'Leave\LeaveController@destroy')->middleware('auth:api');
 
 //Leave Types
-Route::get('leave_types/', 'LeaveType\LeaveTypeController@index')->middleware('auth:api');
-Route::get('leave_types/{id}','LeaveType\LeaveTypeController@show')->middleware('auth:api');
-Route::post('leave_types/', 'LeaveType\LeaveTypeController@store')->middleware('auth:api');
-Route::put('leave_types/{id}', 'LeaveType\LeaveTypeController@update')->middleware('auth:api');
-Route::delete('leave_types/{id}', 'LeaveType\LeaveTypeController@destroy')->middleware('auth:api');
+Route::get('leave_types/', 'Leave\LeaveTypeController@index')->middleware('auth:api');
+Route::get('leave_types/{id}','Leave\LeaveTypeController@show')->middleware('auth:api');
+Route::post('leave_types/', 'Leave\LeaveTypeController@store')->middleware('auth:api');
+Route::put('leave_types/{id}', 'Leave\LeaveTypeController@update')->middleware('auth:api');
+Route::delete('leave_types/{id}', 'Leave\LeaveTypeController@destroy')->middleware('auth:api');
 
 //Records
 Route::get('records/recently', 'Record\RecordController@recently')->middleware('auth:api');

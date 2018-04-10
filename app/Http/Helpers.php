@@ -53,7 +53,7 @@ class Helpers
         if($date != null){
             return date($format, strtotime($date));
         }
-        else return "";
+        else return null;
     }
 
     public static function swapDates(&$from, &$to){

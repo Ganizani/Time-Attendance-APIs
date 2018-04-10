@@ -40,6 +40,8 @@ class CreateUsersTable extends Migration
             $table->string('verified')->default(User::UNVERIFIED);
             $table->string('verification_token')->nullable(true);
             $table->string('profile_picture')->nullable(true);
+            $table->string('uif_number')->nullable(true);
+            $table->string('payment_number')->nullable(true);
             $table->date('start_date')->nullable(true);
             $table->string('spouse_id')->nullable(true);
             $table->string('department_id')->nullable(true);

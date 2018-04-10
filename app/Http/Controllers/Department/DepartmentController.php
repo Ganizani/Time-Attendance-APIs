@@ -56,9 +56,8 @@ class DepartmentController extends ApiController
         $department->name        = $request->name;
         $department->description = $request->description;
         $department->location    = $request->location;
-        $department->created_by  = $request->created_by;
+        $department->created_by  = $request->user()->id;
         $department->created_at  = Carbon::now();
-        $department->updated_at  = null;
         $department->save();
 
         //return
@@ -103,7 +102,7 @@ class DepartmentController extends ApiController
         if($department->isClean()){ //if the site has not changed
             return $this->errorResponse('You need to specify a different value to update',400);
         }
-        $department->updated_by = $request->updated_by;
+        $department->updated_by = $request->user()->id;
         $department->updated_at = Carbon::now();
         $department->save();
 

@@ -11,6 +11,7 @@ namespace App\Http\Controllers\User;
 
 use App\Address;
 use App\Http\Controllers\ApiController;
+use App\Leave;
 use App\Login;
 use App\NextOfKin;
 use App\PasswordReset;
@@ -33,9 +34,10 @@ class UserController extends ApiController
     /**
      * Display a listing of the resource.
      *
+     * \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         $users  = [];
         $result = User::all();
@@ -46,6 +48,91 @@ class UserController extends ApiController
         //return
         return $this->showList(collect($users));
     }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function recently(Request $request)
+    {
+        $users  = [];
+        $result = User::orderBy('id', 'desc')->take(5)->get();
+
+        foreach($result as $item){
+            $users [] = User::model($item);
+        }
+
+        //return
+        return $this->showList(collect($users));
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function leave_count(Request $request)
+    {
+        $count = 0;
+        $date  = isset($request->date) ? Helpers::formatDate($request->date, "Y-m-d") : date("Y-m-d");
+        $query = "SELECT COUNT(*) AS count
+                  FROM   leaves l
+                  WHERE  '$date' BETWEEN l.from_date AND l.to_date";
+
+        $result = DB::select($query);
+
+        foreach($result as $item){
+            $count = $item->count;
+        }
+
+        //return
+        return $this->showMessage($count);
+    }
+
+
+    /**
+     * Display a listing of the resource.
+     *
+     * \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function absent_count(Request $request)
+    {
+        $count = 0;
+        $date  = isset($request->date) ? Helpers::formatDate($request->date, "Y-m-d") : date("Y-m-d");
+        $query = "SELECT COUNT(*) AS count
+                  FROM   users u
+                  WHERE  u.id NOT IN (SELECT user_id FROM records WHERE date = '$date') 
+                         AND u.id NOT IN (SELECT user_id FROM leaves WHERE '$date' BETWEEN from_date AND to_date)";
+
+        $result = DB::select($query);
+
+        foreach($result as $item){
+            $count = $item->count;
+        }
+
+        //return
+        return $this->showMessage($count);
+    }
+
+
+    /**
+     * Display a listing of the resource.
+     *
+     * \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function active_count(Request $request)
+    {
+        $count = User::where('status', 'Active')->count();
+
+        //return
+        return $this->showMessage($count);
+    }
+
 
     /**
      * Store a newly created resource in storage.
@@ -82,7 +169,7 @@ class UserController extends ApiController
         $address->country       = $request->address['country'];
         $address->postal_code   = $request->address['postal_code'];
         $address->created_at    = Carbon::now();
-        $address->created_by    = $request->created_by;
+        $address->created_by    = $request->user()->id;
         $address->updated_by    = null;
         $address->updated_at    = null;
         $address->save();
@@ -98,7 +185,7 @@ class UserController extends ApiController
         $next_of_kin->country       = $request->next_of_kin['country'];
         $next_of_kin->postal_code   = $request->next_of_kin['postal_code'];
         $next_of_kin->created_at    = Carbon::now();
-        $next_of_kin->created_by    = $request->created_by;
+        $next_of_kin->created_by    = $request->user()->id;
         $next_of_kin->updated_by    = null;
         $next_of_kin->updated_at    = null;
         $next_of_kin->save();
@@ -110,7 +197,7 @@ class UserController extends ApiController
         $spouse->work_location  = $request->spouse['work_location'];
         $spouse->cell_phone     = $request->spouse['cell_phone'];
         $spouse->work_phone     = $request->spouse['work_phone'];
-        $spouse->created_by     = $request->created_by;
+        $spouse->created_by     = $request->user()->id;
         $spouse->created_at     = Carbon::now();
         $spouse->updated_at     = null;
         $spouse->save();
@@ -150,7 +237,7 @@ class UserController extends ApiController
         $user->verified             = User::UNVERIFIED;
         $user->verification_token   = User::generateVerificationToken();
         $user->created_at           = Carbon::now();
-        $user->created_by           = $request->created_by;
+        $user->created_by           = $request->user()->id;
         $user->updated_by           = null;
         $user->updated_at           = null;
         $user->save();
