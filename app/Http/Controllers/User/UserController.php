@@ -20,6 +20,7 @@ use App\User;
 use Carbon\Carbon;
 use App\Http\Helpers;
 use Illuminate\Support\Facades\Auth;
+use PhpParser\ErrorHandler\Collecting;
 use Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -40,7 +41,17 @@ class UserController extends ApiController
     public function index(Request $request)
     {
         $users  = [];
-        $result = User::all();
+        $WHEREDepartment = $WHERESearch = "";
+        if(isset($request->department) && $request->department != "") {
+            $WHEREDepartment = " AND u.department_id = '{$request->department}'";
+        }
+
+        $query = "SELECT u.* 
+                  FROM  users u
+                  WHERE u.deleted_at IS NULL {$WHEREDepartment}";
+
+        $result = DB::select($query);
+
         foreach($result as $item){
             $users [] = User::model($item);
         }
@@ -166,28 +177,36 @@ class UserController extends ApiController
         $address->suburb        = $request->address['suburb'];
         $address->city          = $request->address['city'];
         $address->province      = $request->address['province'];
-        $address->country       = $request->address['country'];
-        $address->postal_code   = $request->address['postal_code'];
         $address->created_at    = Carbon::now();
         $address->created_by    = $request->user()->id;
-        $address->updated_by    = null;
-        $address->updated_at    = null;
         $address->save();
+
+
+        //Insert Next of Kin Address
+        $nok_address = new Address();
+        $nok_address_data = $request->next_of_kin['address'];
+        $nok_address->house_no      = $nok_address_data['house_no'];
+        $nok_address->street_no     = $nok_address_data['street_no'];
+        $nok_address->street_name   = $nok_address_data['street_name'];
+        $nok_address->suburb        = $nok_address_data['suburb'];
+        $nok_address->city          = $nok_address_data['city'];
+        $nok_address->province      = $nok_address_data['province'];
+        $nok_address->created_at    = Carbon::now();
+        $nok_address->created_by    = $request->user()->id;
+        $nok_address->save();
 
         //Insert Next of Kin
         $next_of_kin = new NextOfKin();
-        $next_of_kin->house_no      = $request->next_of_kin['house_no'];
-        $next_of_kin->street_no     = $request->next_of_kin['street_no'];
-        $next_of_kin->street_name   = $request->next_of_kin['street_name'];
-        $next_of_kin->suburb        = $request->next_of_kin['suburb'];
-        $next_of_kin->city          = $request->next_of_kin['city'];
-        $next_of_kin->province      = $request->next_of_kin['province'];
-        $next_of_kin->country       = $request->next_of_kin['country'];
-        $next_of_kin->postal_code   = $request->next_of_kin['postal_code'];
+        $next_of_kin->first_name    = $request->next_of_kin['first_name'];
+        $next_of_kin->last_name     = $request->next_of_kin['last_name'];
+        $next_of_kin->middle_name   = $request->next_of_kin['middle_name'];
+        $next_of_kin->email         = $request->next_of_kin['email'];
+        $next_of_kin->cell_phone    = $request->next_of_kin['cell_phone'];
+        $next_of_kin->home_phone    = $request->next_of_kin['home_phone'];
+        $next_of_kin->relationship  = $request->next_of_kin['relationship'];
+        $next_of_kin->address_id    = $nok_address->id;
         $next_of_kin->created_at    = Carbon::now();
         $next_of_kin->created_by    = $request->user()->id;
-        $next_of_kin->updated_by    = null;
-        $next_of_kin->updated_at    = null;
         $next_of_kin->save();
 
         //Insert Spouse
@@ -199,13 +218,13 @@ class UserController extends ApiController
         $spouse->work_phone     = $request->spouse['work_phone'];
         $spouse->created_by     = $request->user()->id;
         $spouse->created_at     = Carbon::now();
-        $spouse->updated_at     = null;
         $spouse->save();
 
         $user = new User();
         $user->employee_code        = $request->employee_code;
         $user->title                = $request->title;
         $user->first_name           = $request->first_name;
+        $user->last_name            = $request->last_name;
         $user->maiden_name          = $request->maiden_name;
         $user->middle_name          = $request->middle_name;
         $user->preferred_name       = $request->preferred_name;
@@ -219,7 +238,7 @@ class UserController extends ApiController
         $user->nationality          = $request->nationality;
         $user->supervisor           = $request->supervisor;
         $user->marital_status       = $request->marital_status;
-        $user->department_id        = $request->department_id;
+        $user->department_id        = $request->department;
         $user->work_cell_phone      = $request->work_cell_phone;
         $user->work_phone           = $request->work_phone;
         $user->work_location        = $request->work_location;
@@ -228,6 +247,8 @@ class UserController extends ApiController
         $user->work_email           = $request->work_email;
         $user->home_phone           = $request->home_phone;
         $user->work_email           = $request->work_email;
+        $user->uif_number           = $request->uif_number;
+        $user->payment_number       = $request->payment_number;
         $user->address_id           = $address->id;
         $user->spouse_id            = $spouse->id;
         $user->next_of_kin_id       = $next_of_kin->id;
@@ -238,8 +259,6 @@ class UserController extends ApiController
         $user->verification_token   = User::generateVerificationToken();
         $user->created_at           = Carbon::now();
         $user->created_by           = $request->user()->id;
-        $user->updated_by           = null;
-        $user->updated_at           = null;
         $user->save();
 
         return $this->showList(collect(User::model($user)));
@@ -269,24 +288,110 @@ class UserController extends ApiController
     {
         $user = User::where('id', $id)->firstOrFail();
 
-        $validator = Validator::make($request->all(), User::updateRules($user->id));
+        $validator = Validator::make($request->all(), User::updateRules($id));
         if ($validator->fails()) return $this->errorResponse($validator->errors(), 400);
 
+        //Validate Address Info
+        $validator = Validator::make($request->address, Address::createRules());
+        if ($validator->fails()) return $this->errorResponse($validator->errors(), 422);
 
-        $user->title        = $request->title;
-        $user->first_name   = $request->first_name;
-        $user->last_name    = $request->last_name;
-        $user->gender       = $request->gender;
-        $user->phone_number = $request->phone_number;
+        //Validate Next of Kin Info
+        $validator = Validator::make($request->next_of_kin, NextOfKin::createRules());
+        if ($validator->fails()) return $this->errorResponse($validator->errors(), 422);
 
-        if($user->isClean()){ //if the user has changed
-            return $this->errorResponse('You need to specify a different value to update',422);
+        //Validate Spouse Info
+        $validator = Validator::make($request->spouse, Spouse::createRules());
+        if ($validator->fails()) return $this->errorResponse($validator->errors(), 422);
+
+        //Update User
+        $user->employee_code        = $request->employee_code;
+        $user->title                = $request->title;
+        $user->first_name           = $request->first_name;
+        $user->last_name            = $request->last_name;
+        $user->maiden_name          = $request->maiden_name;
+        $user->middle_name          = $request->middle_name;
+        $user->preferred_name       = $request->preferred_name;
+        $user->id_number            = $request->id_number;
+        $user->nationality          = $request->nationality;
+        $user->supervisor           = $request->supervisor;
+        $user->gender               = $request->gender;
+        $user->user_type            = $request->user_type;
+        $user->phone_number         = $request->phone_number;
+        $user->email                = $request->email;
+        $user->nationality          = $request->nationality;
+        $user->supervisor           = $request->supervisor;
+        $user->marital_status       = $request->marital_status;
+        $user->department_id        = $request->department;
+        $user->work_cell_phone      = $request->work_cell_phone;
+        $user->work_phone           = $request->work_phone;
+        $user->work_location        = $request->work_location;
+        $user->start_date           = $request->start_date;
+        $user->job_title            = $request->job_title;
+        $user->work_email           = $request->work_email;
+        $user->home_phone           = $request->home_phone;
+        $user->work_email           = $request->work_email;
+        $user->uif_number           = $request->uif_number;
+        $user->payment_number       = $request->payment_number;
+        $user->updated_at           = Carbon::now();
+        $user->updated_by           = $request->user()->id;
+        if($request->has('password') && $request->password != ""){
+            $user->password = User::encryptPassword($request->password);
         }
-        $user->updated_at      = Carbon::now();
-        $user->last_updated_by = $request->updated_by;
-        $user->save();
 
-        return $this->showOne($user,200);
+        //Update Address
+        $address = Address::where('id', $user->address_id)->firstOrFail();
+        $address->house_no      = $request->address['house_no'];
+        $address->street_no     = $request->address['street_no'];
+        $address->street_name   = $request->address['street_name'];
+        $address->suburb        = $request->address['suburb'];
+        $address->city          = $request->address['city'];
+        $address->province      = $request->address['province'];
+        $address->updated_at    = Carbon::now();
+        $address->updated_by    = $request->user()->id;
+
+        //Update Next of Kin
+        $next_of_kin = NextOfKin::where('id', $user->next_of_kin_id)->firstOrFail();
+        $next_of_kin->first_name    = $request->next_of_kin['first_name'];
+        $next_of_kin->last_name     = $request->next_of_kin['last_name'];
+        $next_of_kin->middle_name   = $request->next_of_kin['middle_name'];
+        $next_of_kin->email         = $request->next_of_kin['email'];
+        $next_of_kin->cell_phone    = $request->next_of_kin['cell_phone'];
+        $next_of_kin->home_phone    = $request->next_of_kin['home_phone'];
+        $next_of_kin->relationship  = $request->next_of_kin['relationship'];
+        $next_of_kin->updated_at    = Carbon::now();
+        $next_of_kin->updated_by    = $request->user()->id;
+
+        //Update Next of Kin Address
+
+        $nok_address = Address::where('id', $next_of_kin->address_id)->firstOrFail();
+        $nok_address_data           = $request->next_of_kin['address'];
+        $nok_address->house_no      = $nok_address_data['house_no'];
+        $nok_address->street_no     = $nok_address_data['street_no'];
+        $nok_address->street_name   = $nok_address_data['street_name'];
+        $nok_address->suburb        = $nok_address_data['suburb'];
+        $nok_address->city          = $nok_address_data['city'];
+        $nok_address->province      = $nok_address_data['province'];
+        $nok_address->updated_at    = Carbon::now();
+        $nok_address->updated_by    = $request->user()->id;
+
+        //Insert Spouse
+        $spouse = Spouse::where('id', $user->spouse_id)->firstOrFail();
+        $spouse->name           = $request->spouse['name'];
+        $spouse->employer       = $request->spouse['employer'];
+        $spouse->work_location  = $request->spouse['work_location'];
+        $spouse->cell_phone     = $request->spouse['cell_phone'];
+        $spouse->work_phone     = $request->spouse['work_phone'];
+        $spouse->updated_at     = Carbon::now();
+        $spouse->updated_by     = $request->user()->id;
+
+        //Saves
+        $user->save();
+        $spouse->save();
+        $nok_address->save();
+        $next_of_kin->save();
+        $address->save();
+
+        return $this->showOne(Collect(User::model($user)),200);
     }
 
     /**

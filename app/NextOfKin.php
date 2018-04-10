@@ -97,6 +97,7 @@ class NextOfKin extends Model
                 'cell_phone'    => $item->cell_phone,
                 'home_phone'    => $item->home_phone,
                 'relationship'  => $item->relationship,
+                'address'       => Address::info($item->address_id),
             ];
         }
     }
@@ -113,6 +114,7 @@ class NextOfKin extends Model
             'cell_phone'    => $item->cell_phone,
             'home_phone'    => $item->home_phone,
             'relationship'  => $item->relationship,
+            'address'       => Address::info($item->address_id),
             'created_at'    => Helpers::formatDate($item->created_at),
             'updated_at'    => Helpers::formatDate($item->updated_at),
             'created_by'    => User::info($item->created_by),

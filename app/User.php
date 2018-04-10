@@ -141,27 +141,38 @@ class User extends Authenticatable
 
         return [
             'email'             => 'required|email|unique:users',
-            'password'          => 'required|confirmed|min:8',
-            'user_type'         => 'required|in:' . User::SYSTEM_ADMIN . ',' . User::EMPLOYEE,
             'title'             => 'required',
             'status'            => 'required|in:' . User::ACTIVE . ',' . User::DEACTIVATED ,
-            'gender'            => 'sometimes|nullable|in:' . User::FEMALE . ',' .  User::MALE,
             'first_name'        => 'required|max:255',
             'last_name'         => 'required|max:255',
             'employee_code'     => 'required|max:255',
+            'department'        => 'required|exists:departments,id',
+            'uif_number'        => 'required',
+            'payment_number'    => 'required',
+            'work_location'     => 'required',
+            'job_title'         => 'required',
+            'phone_number'      => 'required',
+            'gender'            => 'sometimes|nullable|in:' . User::FEMALE . ',' .  User::MALE,
         ];
     }
 
     public static function updateRules($id){
 
         return [
-            'email'         => 'email|unique:users,email,'.$id,
-            'password'      => 'min:8',
-            'gender'        => 'sometimes|nullable|in:' . User::FEMALE . ',' .  User::MALE,
-            'user_type'     => 'required|in:' . User::SYSTEM_ADMIN . ',' . User::EMPLOYEE,
-            'first_name'    => 'max:255',
-            'last_name'     => 'max:255',
+            'email'             => 'email|unique:users,email,'.$id,
+            'password'          => 'sometimes|min:5',
+            'title'             => 'required',
+            'status'            => 'required|in:' . User::ACTIVE . ',' . User::DEACTIVATED ,
+            'first_name'        => 'required|max:255',
+            'last_name'         => 'required|max:255',
             'employee_code'     => 'required|max:255',
+            'department'        => 'required|exists:departments,id',
+            'uif_number'        => 'required',
+            'payment_number'    => 'required',
+            'work_location'     => 'required',
+            'job_title'         => 'required',
+            'phone_number'      => 'required',
+            'gender'            => 'sometimes|nullable|in:' . User::FEMALE . ',' .  User::MALE,
         ];
     }
 
@@ -264,7 +275,7 @@ class User extends Authenticatable
             'next_of_kin'          => NextOfKin::info($item->next_of_kin_id),
             'address'              => Address::info($item->address_id),
             'spouse'               => Spouse::info($item->spouse_id),
-            'supervisor'           => User::info($item->supervisor_id),
+            'supervisor'           => User::info($item->supervisor),
             'department'           => Department::info($item->department_id),
             'profile_picture'      => $item->profile_picture,
             'token'                => $token,

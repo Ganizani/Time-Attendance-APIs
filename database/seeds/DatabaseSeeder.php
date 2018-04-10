@@ -61,9 +61,9 @@ class DatabaseSeeder extends Seeder
         $departments = ["Accounting/Finance", 'Human Resources', 'Sales', 'Security', 'Tech Development', 'Operations Planning'];
 
         factory(User::class, 10)->create();
-        factory(Address::class, 5)->create();
-        factory(NextOfKin::class, 5)->create();
-        factory(Spouse::class, 5)->create();
+        factory(Address::class, 20)->create();
+        factory(NextOfKin::class, 10)->create();
+        factory(Spouse::class, 10)->create();
 
         foreach ($departments as $department) {
             $created_by = User::all()->random();

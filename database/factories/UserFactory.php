@@ -25,6 +25,9 @@ use Carbon\Carbon;
 */
 
 $factory->define(User::class, function (Faker $faker) {
+    //$supervisor = User::all()->random();
+    //$supervisor = Spouse::all()->random();
+
     return [
         'employee_code'      => "GNZ-".$faker->randomNumber(3),
         'title'              =>  $faker->title,//$faker->randomElement(['Mr', 'Mrs', 'Miss', 'Dr', 'Prof']),
@@ -36,7 +39,7 @@ $factory->define(User::class, function (Faker $faker) {
         'id_number'          => str_random(13),
         'nationality'        => $faker->country(),
         'marital_status'     => $faker->randomElement(['Single', 'Married', 'Widowed']),
-        'supervisor'         => '',
+        'supervisor'         => rand(1,10),
         'work_phone'         => '',
         'work_cell_phone'    => '',
         'work_location'      => '',
@@ -52,11 +55,11 @@ $factory->define(User::class, function (Faker $faker) {
         'email'              => $faker->unique()->safeEmail,
         'password'           => bcrypt('12345'), // secret
         'profile_picture'    => null,
-        'start_date'         => Carbon::now()->subDays(rand(100,365)),
-        'spouse_id'          => rand(1,5),
+        'start_date'         => Carbon::now(),
+        'spouse_id'          => rand(1,10),
         'department_id'      => rand(1,5),
-        'address_id'         => rand(1,5),
-        'next_of_kin_id'     => rand(1,5),
+        'address_id'         => rand(1,10),
+        'next_of_kin_id'     => rand(1,10),
         'created_at'         => Carbon::now()
     ];
 });
@@ -92,8 +95,8 @@ $factory->define(NextOfKin::class, function (Faker $faker) {
         'email'         => $faker->safeEmail(),
         'cell_phone'    => "",
         'home_phone'    => "",
-        'address_id'    => null,
-        'relationship'  => $faker->randomElement(['Cousin', 'Spouse', 'Fiance', 'Husband', 'Wife', 'Uncle', 'Aunt']),
+        'address_id'    => rand(10,20),
+        'relationship'  => $faker->randomElement(['Spouse', 'Children', 'Parent', 'Sibling', 'Niece/Nephew', 'Aunt/Uncle', 'Cousin', 'Grand Parent', 'Other' ]),
         'created_by'    => $created_by->id,
         'created_at'    => Carbon::now()
     ];

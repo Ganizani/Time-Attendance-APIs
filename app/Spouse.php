@@ -51,10 +51,10 @@ class Spouse extends Model
     public static function createRules(){
 
         return [
-            'name'          => 'required',
+            'name'          => 'sometimes|nullable',
             'employer'      => 'sometimes|nullable',
             'work_location' => 'sometimes|nullable',
-            'cell_phone'    => 'sometimes',
+            'cell_phone'    => 'sometimes|nullable',
             'work_phone'    => 'sometimes|nullable',
         ];
     }
