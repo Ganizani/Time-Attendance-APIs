@@ -12,6 +12,7 @@ use App\User;
 use App\Http\Controllers\ApiController;
 use App\Http\Helpers;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Validator;
 use Illuminate\Http\Request;
@@ -118,6 +119,43 @@ class RecordController extends ApiController
         //return
         return $this->showList(collect(Record::model($record)));
     }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function manual_clock(Request $request)
+    {
+        $validator = Validator::make($request->all(), Record::manualClockRules());
+
+        if ($validator->fails()) {
+            return $this->errorResponse($validator->errors(), 400);
+        }
+
+        if(Auth::attempt(['email' => $request->email, 'password' => $request->password])){
+            // Authentication passed...
+            $user = Auth::user();
+        }
+        else return $this->errorResponse( "Invalid Login Credentials", 401);
+
+        $record = new Record();
+        $record->user_id       = $request->user()->id;
+        $record->imei_number   = null;
+        $record->date          = date("Y-m-d");
+        $record->time          = date("H:i:s");
+        $record->latitude      = 0;
+        $record->longitude     = 0;
+        $record->status        = $request->status;
+        $record->created_at    = Carbon::now();
+        $record->updated_at    = null;
+        $record->save();
+
+        //return
+        return $this->showList(collect(Record::model($record)));
+    }
+
 
     /**
      * Display the specified resource.

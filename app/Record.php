@@ -83,8 +83,16 @@ class Record extends Model
     }
 
 
-
     //Rules
+    public static function manualClockRules(){
+
+        return [
+            'email'    => 'required|exists:users,email',
+            'password' => 'required',
+            'status'   => 'required'
+        ];
+    }
+
     public static function createRules(){
 
         return [
