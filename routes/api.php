@@ -71,7 +71,7 @@ Route::get('records/', 'Record\RecordController@index')->middleware('auth:api');
 Route::get('records/{id}','Record\RecordController@show')->middleware('auth:api');
 Route::post('records/', 'Record\RecordController@store')->middleware('auth:api');
 Route::post('records/clock', 'Record\RecordController@manual_clock');
-Route::post('records/mobile', 'User\UserController@mobile_clock');
+Route::post('records/mobile', 'Record\RecordController@mobile_clock');
 
 //Reports
 Route::post('reports/absentee', 'Report\ReportController@absentee')->middleware('auth:api');
