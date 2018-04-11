@@ -88,7 +88,7 @@ class Record extends Model
     public static function createRules(){
 
         return [
-            'user_id'     => 'required|exists:learners,id',
+            'user'        => 'required|exists:users,id',
             'imei_number' => 'sometimes|nullable|exists:devices,imei_number',
             'date'        => 'required|date_format:"Y-m-d"',
             'time'        => 'required|date_format:"H:s:i"',
