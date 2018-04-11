@@ -443,6 +443,43 @@ class UserController extends ApiController
         }
     }
 
+    public function mobile_login(Request $request)
+    {
+        if(!isset($request->email) || !isset($request->password)  || ($request->password == "" || $request-> email == "")){
+            $export = [
+                'success' => 1,
+                'email'   => $request->email,
+                'message' => "Please Enter All Required Fields",
+            ];
+            return response()->json($export, 200);
+        }
+
+        if(Auth::attempt(['email' => $request->email, 'password' => $request->password])){
+            // Authentication passed...
+            $user = Auth::user();
+            $token =  $user->createToken('Ganizani - Time Attendance Password Grant Client')->accessToken;
+
+            $export = [
+                'success' => 1,
+                'email'   => $request->email,
+                'compID'  => 1 ,
+                'deptID'  => $user->department_id,
+                'name'    => $user->title. " ". $user->first_name . " ".$user->last_name,
+                'message' => "Login Successful",
+            ];
+
+            return response()->json($export, 200);
+        }
+        else{
+            $export = [
+                'success' => 1,
+                'email'   => $request->email,
+                'message' => "Invalid Details",
+            ];
+            return response()->json($export, 200);
+        }
+    }
+
     public function forgotPassword(Request $request){
 
         $validator = Validator::make($request->all(), User::forgotPasswordRules());

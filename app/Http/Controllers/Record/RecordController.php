@@ -12,6 +12,8 @@ use App\User;
 use App\Http\Controllers\ApiController;
 use App\Http\Helpers;
 use Carbon\Carbon;
+use GuzzleHttp\Exception\RequestException;
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Validator;
@@ -155,6 +157,29 @@ class RecordController extends ApiController
         //return
         return $this->showList(collect(Record::model($record)));
     }
+
+    public function mobile_clock(Request $request)
+    {
+        try {
+            $record = new Record();
+            $record->user_id       = $request->user_id;
+            $record->imei_number   = null;
+            $record->date          = $request->date;
+            $record->time          = $request->time;
+            $record->latitude      = $request->latitude;;
+            $record->longitude     = $request->longitude;
+            $record->status        = $request->status;
+            $record->created_at    = Carbon::now();
+            $record->updated_at    = null;
+            $record->save();
+        }
+        catch (QueryException $e){
+            return "0";
+        }
+        //return
+        return "1";
+    }
+
 
 
     /**
