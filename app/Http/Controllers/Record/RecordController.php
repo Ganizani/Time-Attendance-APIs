@@ -143,8 +143,8 @@ class RecordController extends ApiController
         $record = new Record();
         $record->user_id       = $request->user()->id;
         $record->imei_number   = null;
-        $record->date          = date("Y-m-d");
-        $record->time          = date("H:i:s");
+        $record->date          = Helpers::formatDate(Carbon::now(), "Y-m-d");
+        $record->time          = Helpers::formatDate(Carbon::now(), "H:i:s");
         $record->latitude      = 0;
         $record->longitude     = 0;
         $record->status        = $request->status;
