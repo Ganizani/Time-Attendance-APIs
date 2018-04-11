@@ -160,22 +160,18 @@ class RecordController extends ApiController
 
     public function mobile_clock(Request $request)
     {
-        try {
-            $record = new Record();
-            $record->user_id       = $request->user_id;
-            $record->imei_number   = null;
-            $record->date          = $request->date;
-            $record->time          = $request->time;
-            $record->latitude      = $request->latitude;;
-            $record->longitude     = $request->longitude;
-            $record->status        = $request->status;
-            $record->created_at    = Carbon::now();
-            $record->updated_at    = null;
-            $record->save();
-        }
-        catch (QueryException $e){
-            return "0";
-        }
+        $record = new Record();
+        $record->user_id       = $request->user_id;
+        $record->imei_number   = null;
+        $record->date          = $request->date;
+        $record->time          = $request->time;
+        $record->latitude      = $request->latitude;;
+        $record->longitude     = $request->longitude;
+        $record->status        = $request->status;
+        $record->created_at    = Carbon::now();
+        $record->updated_at    = null;
+        $record->save();
+
         //return
         return "1";
     }
