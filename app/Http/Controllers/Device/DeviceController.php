@@ -71,8 +71,8 @@ class DeviceController extends ApiController
         $device->supervisor     = $request->supervisor;
         $device->status         = $request->status;
         $device->department_id  = $request->department;
-        $device->created_by     = $request->created_by;
-        $device->created_at     = Carbon::now();
+        $device->created_by     = $request->user()->id;
+        $device->created_at     = Carbon::now('CAT');
         $device->updated_at     = null;
         $device->save();
 
@@ -121,8 +121,8 @@ class DeviceController extends ApiController
         if($device->isClean()){ //if the site has not changed
             return $this->errorResponse('You need to specify a different value to update',400);
         }
-        $device->updated_by = $request->updated_by;
-        $device->updated_at = Carbon::now();
+        $device->updated_by = $request->user()->id;
+        $device->updated_at = Carbon::now('CAT');
         $device->save();
 
         //return

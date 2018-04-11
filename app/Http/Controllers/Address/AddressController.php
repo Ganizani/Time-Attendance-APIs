@@ -62,7 +62,7 @@ class AddressController extends ApiController
         $address->country        = $request->country;
         $address->postal_code    = $request->postal_code;
         $address->created_by     = $request->user()->id;
-        $address->created_at     = Carbon::now();
+        $address->created_at     = Carbon::now('CAT');
         $address->updated_at     = null;
         $address->save();
 
@@ -113,7 +113,7 @@ class AddressController extends ApiController
             return $this->errorResponse('You need to specify a different value to update',400);
         }
         $address->updated_by = $request->user()->id;
-        $address->updated_at = Carbon::now();
+        $address->updated_at = Carbon::now('CAT');
         $address->save();
 
         //return

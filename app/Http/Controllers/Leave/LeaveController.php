@@ -66,7 +66,7 @@ class LeaveController extends ApiController
         $leave->phone_on_leave    = $request->phone_on_leave;
         $leave->processed_by      = $request->user()->id;
         $leave->created_by        = $request->user()->id;
-        $leave->created_at        = Carbon::now();
+        $leave->created_at        = Carbon::now('CAT');
         $leave->updated_at        = null;
         $leave->save();
 
@@ -118,7 +118,7 @@ class LeaveController extends ApiController
             return $this->errorResponse('You need to specify a different value to update',400);
         }
         $leave->updated_by = $request->user()->id;
-        $leave->updated_at = Carbon::now();
+        $leave->updated_at = Carbon::now('CAT');
         $leave->save();
 
         //return

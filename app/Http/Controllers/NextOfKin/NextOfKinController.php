@@ -83,8 +83,8 @@ class NextOfKinController extends ApiController
         $next_of_kin->home_phone    = $request->home_phone;
         $next_of_kin->relationship  = $request->relationship;
         $next_of_kin->address_id    = $request->address;
-        $next_of_kin->created_by    = $request->created_by;
-        $next_of_kin->created_at    = Carbon::now();
+        $next_of_kin->created_by    = $request->user()->id;
+        $next_of_kin->created_at    = Carbon::now('CAT');
         $next_of_kin->updated_at    = null;
         $next_of_kin->save();
 
@@ -149,12 +149,12 @@ class NextOfKinController extends ApiController
         if($next_of_kin->isClean() && $address->isClean()){ //if the site has not changed
             return $this->errorResponse('You need to specify a different value to update',400);
         }
-        $next_of_kin->updated_by = $request->updated_by;
-        $next_of_kin->updated_at = Carbon::now();
+        $next_of_kin->updated_by = $request->user()->id;
+        $next_of_kin->updated_at = Carbon::now('CAT');
         $next_of_kin->save();
 
-        $address->updated_by = $request->updated_by;
-        $address->updated_at = Carbon::now();
+        $address->updated_by = $request->user()->id;
+        $address->updated_at = Carbon::now('CAT');
         $address->save();
 
         //return

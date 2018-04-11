@@ -57,7 +57,7 @@ class DepartmentController extends ApiController
         $department->description = $request->description;
         $department->location    = $request->location;
         $department->created_by  = $request->user()->id;
-        $department->created_at  = Carbon::now();
+        $department->created_at  = Carbon::now('CAT');
         $department->save();
 
         //return
@@ -103,7 +103,7 @@ class DepartmentController extends ApiController
             return $this->errorResponse('You need to specify a different value to update',400);
         }
         $department->updated_by = $request->user()->id;
-        $department->updated_at = Carbon::now();
+        $department->updated_at = Carbon::now('CAT');
         $department->save();
 
         //return

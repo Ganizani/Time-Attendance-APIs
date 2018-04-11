@@ -177,7 +177,7 @@ class UserController extends ApiController
         $address->suburb        = $request->address['suburb'];
         $address->city          = $request->address['city'];
         $address->province      = $request->address['province'];
-        $address->created_at    = Carbon::now();
+        $address->created_at    = Carbon::now('CAT');
         $address->created_by    = $request->user()->id;
         $address->save();
 
@@ -191,7 +191,7 @@ class UserController extends ApiController
         $nok_address->suburb        = $nok_address_data['suburb'];
         $nok_address->city          = $nok_address_data['city'];
         $nok_address->province      = $nok_address_data['province'];
-        $nok_address->created_at    = Carbon::now();
+        $nok_address->created_at    = Carbon::now('CAT');
         $nok_address->created_by    = $request->user()->id;
         $nok_address->save();
 
@@ -205,7 +205,7 @@ class UserController extends ApiController
         $next_of_kin->home_phone    = $request->next_of_kin['home_phone'];
         $next_of_kin->relationship  = $request->next_of_kin['relationship'];
         $next_of_kin->address_id    = $nok_address->id;
-        $next_of_kin->created_at    = Carbon::now();
+        $next_of_kin->created_at    = Carbon::now('CAT');
         $next_of_kin->created_by    = $request->user()->id;
         $next_of_kin->save();
 
@@ -217,7 +217,7 @@ class UserController extends ApiController
         $spouse->cell_phone     = $request->spouse['cell_phone'];
         $spouse->work_phone     = $request->spouse['work_phone'];
         $spouse->created_by     = $request->user()->id;
-        $spouse->created_at     = Carbon::now();
+        $spouse->created_at     = Carbon::now('CAT');
         $spouse->save();
 
         $user = new User();
@@ -257,7 +257,7 @@ class UserController extends ApiController
         $user->status               = User::ACTIVE;
         $user->verified             = User::UNVERIFIED;
         $user->verification_token   = User::generateVerificationToken();
-        $user->created_at           = Carbon::now();
+        $user->created_at           = Carbon::now('CAT');
         $user->created_by           = $request->user()->id;
         $user->save();
 
@@ -332,7 +332,7 @@ class UserController extends ApiController
         $user->work_email           = $request->work_email;
         $user->uif_number           = $request->uif_number;
         $user->payment_number       = $request->payment_number;
-        $user->updated_at           = Carbon::now();
+        $user->updated_at           = Carbon::now('CAT');
         $user->updated_by           = $request->user()->id;
         if($request->has('password') && $request->password != ""){
             $user->password = User::encryptPassword($request->password);
@@ -346,7 +346,7 @@ class UserController extends ApiController
         $address->suburb        = $request->address['suburb'];
         $address->city          = $request->address['city'];
         $address->province      = $request->address['province'];
-        $address->updated_at    = Carbon::now();
+        $address->updated_at    = Carbon::now('CAT');
         $address->updated_by    = $request->user()->id;
 
         //Update Next of Kin
@@ -358,7 +358,7 @@ class UserController extends ApiController
         $next_of_kin->cell_phone    = $request->next_of_kin['cell_phone'];
         $next_of_kin->home_phone    = $request->next_of_kin['home_phone'];
         $next_of_kin->relationship  = $request->next_of_kin['relationship'];
-        $next_of_kin->updated_at    = Carbon::now();
+        $next_of_kin->updated_at    = Carbon::now('CAT');
         $next_of_kin->updated_by    = $request->user()->id;
 
         //Update Next of Kin Address
@@ -371,7 +371,7 @@ class UserController extends ApiController
         $nok_address->suburb        = $nok_address_data['suburb'];
         $nok_address->city          = $nok_address_data['city'];
         $nok_address->province      = $nok_address_data['province'];
-        $nok_address->updated_at    = Carbon::now();
+        $nok_address->updated_at    = Carbon::now('CAT');
         $nok_address->updated_by    = $request->user()->id;
 
         //Insert Spouse
@@ -381,7 +381,7 @@ class UserController extends ApiController
         $spouse->work_location  = $request->spouse['work_location'];
         $spouse->cell_phone     = $request->spouse['cell_phone'];
         $spouse->work_phone     = $request->spouse['work_phone'];
-        $spouse->updated_at     = Carbon::now();
+        $spouse->updated_at     = Carbon::now('CAT');
         $spouse->updated_by     = $request->user()->id;
 
         //Saves
@@ -425,7 +425,7 @@ class UserController extends ApiController
     {
         $login = new Login();
         $login->username       = $request->email;
-        $login->created_at     = Carbon::now();
+        $login->created_at     = Carbon::now('CAT');
         $login->updated_at     = null;
         $login->attempt_number = Login::getAttemptNumber($request->email);
 
@@ -497,7 +497,7 @@ class UserController extends ApiController
         $forgot_password = new PasswordReset();
         $forgot_password->email     = $request->email;
         $forgot_password->token     = User::generateVerificationToken();
-        $forgot_password->expire_at = Carbon::now()->addDay();
+        $forgot_password->expire_at = Carbon::now('CAT')->addDay();
         $forgot_password->save();
 
         //Send Message

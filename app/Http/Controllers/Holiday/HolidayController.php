@@ -57,8 +57,8 @@ class HolidayController extends ApiController
         $holiday->description   = $request->description;
         $holiday->date          = $request->date;
         $holiday->department_id = $request->department;
-        $holiday->created_by    = $request->created_by;
-        $holiday->created_at    = Carbon::now();
+        $holiday->created_by    = $request->user()->id;
+        $holiday->created_at    = Carbon::now('CAT');
         $holiday->updated_at    = null;
         $holiday->save();
 
@@ -78,9 +78,8 @@ class HolidayController extends ApiController
         $holiday->name         = $request->name;
         $holiday->description  = $request->description;
         $holiday->date         = $request->date;
-        $holiday->company_id   = Company::companyIdFromName($request->company);
-        $holiday->site_id      = Site::siteIdFromName($request->site);
-        $holiday->created_by   = isset($request->created_by)? $request->created_by : null;
+        $holiday->department_id = $request->department_id;
+        $holiday->created_by   = $request->user()->id ;
         $holiday->created_at   = Carbon::now();
         $holiday->updated_at   = null;
         $holiday->save();
@@ -126,8 +125,8 @@ class HolidayController extends ApiController
         if($holiday->isClean()){ //if the site has not changed
             return $this->errorResponse('You need to specify a different value to update',422);
         }
-        $holiday->updated_by = $request->updated_by;
-        $holiday->updated_at = Carbon::now();
+        $holiday->updated_by = $request->user()->id;
+        $holiday->updated_at = Carbon::now('CAT');
         $holiday->save();
 
         //return

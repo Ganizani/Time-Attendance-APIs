@@ -54,7 +54,7 @@ class LeaveTypeController extends ApiController
         $leave_type->name             = $request->name;
         $leave_type->description      = $request->description;
         $leave_type->created_by       = $request->user()->id ;
-        $leave_type->created_at       = Carbon::now();
+        $leave_type->created_at       = Carbon::now('CAT');
         $leave_type->save();
 
         //return
@@ -98,7 +98,7 @@ class LeaveTypeController extends ApiController
         }
 
         $leave_type->updated_by = $request->user()->id;
-        $leave_type->updated_at = Carbon::now();
+        $leave_type->updated_at = Carbon::now('CAT');
         $leave_type->save();
 
         //return

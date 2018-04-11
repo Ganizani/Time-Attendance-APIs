@@ -59,8 +59,8 @@ class SpouseController extends ApiController
         $spouse->work_location  = $request->work_location;
         $spouse->cell_phone     = $request->cell_phone;
         $spouse->work_phone     = $request->work_phone;
-        $spouse->created_by     = $request->created_by;
-        $spouse->created_at     = Carbon::now();
+        $spouse->created_by     = $request->user()->id;
+        $spouse->created_at     = Carbon::now('CAT');
         $spouse->updated_at     = null;
         $spouse->save();
 
@@ -107,8 +107,8 @@ class SpouseController extends ApiController
         if($spouse->isClean()){ //if the site has not changed
             return $this->errorResponse('You need to specify a different value to update',400);
         }
-        $spouse->updated_by = $request->updated_by;
-        $spouse->updated_at = Carbon::now();
+        $spouse->updated_by = $request->user()->id;
+        $spouse->updated_at = Carbon::now('CAT');
         $spouse->save();
 
         //return

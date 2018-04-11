@@ -223,7 +223,7 @@ class ReportController extends ApiController
         $report_log->to_date        = $request->to_date;
         $report_log->department_id  = $request->department;
         $report_log->user_id        = $request->user()->id;
-        $report_log->created_at     = Carbon::now();
+        $report_log->created_at     = Carbon::now('CAT');
         $report_log->updated_at     = null;
         $report_log->save();
 
