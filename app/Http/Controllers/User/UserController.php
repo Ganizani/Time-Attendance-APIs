@@ -461,6 +461,7 @@ class UserController extends ApiController
 
             $export = [
                 'success' => 1,
+                'id'      => $user->id,
                 'email'   => $request->email,
                 'compID'  => 1 ,
                 'deptID'  => $user->department_id,
