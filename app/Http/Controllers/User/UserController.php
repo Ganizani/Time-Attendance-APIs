@@ -171,8 +171,8 @@ class UserController extends ApiController
 
         //Insert Address
         $address = new Address();
-        $address->house_no      = $request->address['house_no'];
-        $address->street_no     = $request->address['street_no'];
+        $address->house_no      = $request->address['house_number'];
+        $address->street_no     = $request->address['street_number'];
         $address->street_name   = $request->address['street_name'];
         $address->suburb        = $request->address['suburb'];
         $address->city          = $request->address['city'];
@@ -185,8 +185,8 @@ class UserController extends ApiController
         //Insert Next of Kin Address
         $nok_address = new Address();
         $nok_address_data = $request->next_of_kin['address'];
-        $nok_address->house_no      = $nok_address_data['house_no'];
-        $nok_address->street_no     = $nok_address_data['street_no'];
+        $nok_address->house_no      = $nok_address_data['house_number'];
+        $nok_address->street_no     = $nok_address_data['street_number'];
         $nok_address->street_name   = $nok_address_data['street_name'];
         $nok_address->suburb        = $nok_address_data['suburb'];
         $nok_address->city          = $nok_address_data['city'];
@@ -340,8 +340,8 @@ class UserController extends ApiController
 
         //Update Address
         $address = Address::where('id', $user->address_id)->firstOrFail();
-        $address->house_no      = $request->address['house_no'];
-        $address->street_no     = $request->address['street_no'];
+        $address->house_no      = $request->address['house_number'];
+        $address->street_no     = $request->address['street_number'];
         $address->street_name   = $request->address['street_name'];
         $address->suburb        = $request->address['suburb'];
         $address->city          = $request->address['city'];
@@ -365,8 +365,8 @@ class UserController extends ApiController
 
         $nok_address = Address::where('id', $next_of_kin->address_id)->firstOrFail();
         $nok_address_data           = $request->next_of_kin['address'];
-        $nok_address->house_no      = $nok_address_data['house_no'];
-        $nok_address->street_no     = $nok_address_data['street_no'];
+        $nok_address->house_no      = $nok_address_data['house_number'];
+        $nok_address->street_no     = $nok_address_data['street_number'];
         $nok_address->street_name   = $nok_address_data['street_name'];
         $nok_address->suburb        = $nok_address_data['suburb'];
         $nok_address->city          = $nok_address_data['city'];

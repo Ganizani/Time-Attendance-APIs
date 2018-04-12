@@ -48,28 +48,28 @@ class Address extends Model
     public static function createRules(){
 
         return [
-            'house_no'     => 'sometimes|nullable',
-            'street_no'    => 'sometimes|nullable',
-            'street_name'  => 'sometimes|nullable',
-            'suburb'       => 'sometimes|nullable',
-            'city'         => 'sometimes|nullable',
-            'province'     => 'sometimes|nullable',
-            'country'      => 'sometimes|nullable',
-            'postal_code'  => 'sometimes|nullable',
+            'house_number'  => 'sometimes|nullable',
+            'street_number' => 'sometimes|nullable',
+            'street_name'   => 'sometimes|nullable',
+            'suburb'        => 'sometimes|nullable',
+            'city'          => 'sometimes|nullable',
+            'province'      => 'sometimes|nullable',
+            'country'       => 'sometimes|nullable',
+            'postal_code'   => 'sometimes|nullable',
         ];
     }
 
     public static function updateRules($id){
 
         return [
-            'house_no'     => 'sometimes|nullable',
-            'street_no'    => 'sometimes|nullable',
-            'street_name'  => 'sometimes|nullable',
-            'suburb'       => 'sometimes|nullable',
-            'city'         => 'sometimes|nullable',
-            'province'     => 'sometimes|nullable',
-            'country'      => 'sometimes|nullable',
-            'postal_code'  => 'sometimes|nullable',
+            'house_number'  => 'sometimes|nullable',
+            'street_number' => 'sometimes|nullable',
+            'street_name'   => 'sometimes|nullable',
+            'suburb'        => 'sometimes|nullable',
+            'city'          => 'sometimes|nullable',
+            'province'      => 'sometimes|nullable',
+            'country'       => 'sometimes|nullable',
+            'postal_code'   => 'sometimes|nullable',
         ];
     }
 
@@ -83,8 +83,8 @@ class Address extends Model
         else {
             return [
                 'id'            => $item->id,
-                'house_no'      => $item->house_no,
-                'street_no'     => $item->street_no,
+                'house_number'  => $item->house_no,
+                'street_number' => $item->street_no,
                 'street_name'   => $item->street_name,
                 'suburb'        => $item->suburb,
                 'city'          => $item->city,
@@ -100,8 +100,8 @@ class Address extends Model
 
         return [
             'id'            => $item->id,
-            'house_no'      => $item->house_no,
-            'street_no'     => $item->street_no,
+            'house_number'  => $item->house_no,
+            'street_number' => $item->street_no,
             'street_name'   => $item->street_name,
             'suburb'        => $item->suburb,
             'city'          => $item->city,

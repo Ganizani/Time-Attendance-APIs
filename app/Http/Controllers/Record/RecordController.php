@@ -147,8 +147,8 @@ class RecordController extends ApiController
         $record->imei_number   = null;
         $record->date          = Helpers::formatDate(Carbon::now('CAT'), "Y-m-d");
         $record->time          = Helpers::formatDate(Carbon::now('CAT'), "H:i:s");
-        $record->latitude      = 0;
-        $record->longitude     = 0;
+        $record->latitude      = $request->latitude;
+        $record->longitude     = $request->longitude;
         $record->status        = $request->status;
         $record->created_at    = Carbon::now();
         $record->updated_at    = null;

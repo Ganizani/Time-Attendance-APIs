@@ -53,8 +53,8 @@ class AddressController extends ApiController
         }
 
         $address = new Address();
-        $address->house_no       = $request->house_no;
-        $address->street_no      = $request->street_no;
+        $address->house_no       = $request->house_number;
+        $address->street_no      = $request->street_number;
         $address->street_name    = $request->street_name;
         $address->suburb         = $request->suburb;
         $address->city           = $request->city;
@@ -100,8 +100,8 @@ class AddressController extends ApiController
             return $this->errorResponse($validator->errors(), 400);
         }
 
-        $address->house_no       = $request->house_no;
-        $address->street_no      = $request->street_no;
+        $address->house_no       = $request->house_number;
+        $address->street_no      = $request->street_number;
         $address->street_name    = $request->street_name;
         $address->suburb         = $request->suburb;
         $address->city           = $request->city;

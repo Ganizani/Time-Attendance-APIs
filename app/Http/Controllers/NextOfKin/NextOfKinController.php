@@ -60,8 +60,8 @@ class NextOfKinController extends ApiController
 
         //Address
         $address = new Address();
-        $address->house_no      = $request->address['house_no'];
-        $address->street_no     = $request->address['street_no'];
+        $address->house_no      = $request->address['house_number'];
+        $address->street_no     = $request->address['street_number'];
         $address->street_name   = $request->address['street_name'];
         $address->suburb        = $request->address['suburb'];
         $address->city          = $request->address['city'];
@@ -126,8 +126,8 @@ class NextOfKinController extends ApiController
         if ($validator->fails())return $this->errorResponse($validator->errors(), 400);
 
         //Address
-        $address->house_no      = $request->address['house_no'];
-        $address->street_no     = $request->address['street_no'];
+        $address->house_no      = $request->address['house_number'];
+        $address->street_no     = $request->address['street_number'];
         $address->street_name   = $request->address['street_name'];
         $address->suburb        = $request->address['suburb'];
         $address->city          = $request->address['city'];

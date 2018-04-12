@@ -87,9 +87,11 @@ class Record extends Model
     public static function manualClockRules(){
 
         return [
-            'email'    => 'required|exists:users,email',
-            'password' => 'required',
-            'status'   => 'required'
+            'email'     => 'required|exists:users,email',
+            'password'  => 'required',
+            'latitude'  => 'required',
+            'longitude' => 'required',
+            'status'    => 'required'
         ];
     }
 
