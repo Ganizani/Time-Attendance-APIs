@@ -30,7 +30,7 @@ $factory->define(User::class, function (Faker $faker) {
 
     return [
         'employee_code'      => "GNZ-".$faker->randomNumber(3),
-        'title'              =>  $faker->title,//$faker->randomElement(['Mr', 'Mrs', 'Miss', 'Dr', 'Prof']),
+        'title'              => $faker->title,//$faker->randomElement(['Mr', 'Mrs', 'Miss', 'Dr', 'Prof']),
         'first_name'         => $faker->firstName(),
         'last_name'          => $faker->lastName(),
         'middle_name'        => $faker->randomElement([$faker->lastName(), '']),

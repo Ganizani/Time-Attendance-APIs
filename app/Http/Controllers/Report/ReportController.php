@@ -115,8 +115,13 @@ class ReportController extends ApiController
                     $in  = Record::getClockingByIdDate($date['date'], $user_data->id, "IN");
                     $out = Record::getClockingByIdDate($date['date'], $user_data->id, "OUT");
 
+                    $clock_out = Carbon::parse($in->date . " ". $in->time);
+                    $normal_hours = $clock_out->diffInSeconds($out->date . " ". $out->time);
+
                     $data [] = [
                         'user' => User::info($user_data->id),
+                        'normal_hours' => number_format(($normal_hours / 3600),  2),
+                        'extra_hours'  => 0,
                         'record'  => [
                             'in'  => Record::info($in),
                             'out' => Record::info($out)

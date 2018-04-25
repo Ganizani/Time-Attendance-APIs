@@ -64,7 +64,6 @@ class LeaveController extends ApiController
         $leave->address_on_leave  = $request->address_on_leave;
         $leave->email_on_leave    = $request->email_on_leave;
         $leave->phone_on_leave    = $request->phone_on_leave;
-        $leave->processed_by      = $request->user()->id;
         $leave->created_by        = $request->user()->id;
         $leave->created_at        = Carbon::now('CAT');
         $leave->updated_at        = null;

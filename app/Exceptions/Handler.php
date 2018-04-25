@@ -123,6 +123,8 @@ class Handler extends ExceptionHandler
             return $this->errorResponse($message, $code);
         }
 
+
+
         //Code for Handling any other General HTTP Exception
         if($exception instanceof HttpException){
 
