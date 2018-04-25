@@ -473,7 +473,7 @@ class UserController extends ApiController
         }
         else{
             $export = [
-                'success' => 1,
+                'success' => 0,
                 'email'   => $request->email,
                 'message' => "Invalid Details",
             ];
