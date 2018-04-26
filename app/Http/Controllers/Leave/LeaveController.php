@@ -8,6 +8,7 @@
 
 namespace App\Http\Controllers\Leave;
 use App\Address;
+use App\Http\Helpers;
 use App\Leave;
 use App\LeaveType;
 use App\Http\Controllers\ApiController;
@@ -23,6 +24,13 @@ use Illuminate\Http\Request;
  */
 class LeaveController extends ApiController
 {
+    private $helper;
+
+    function __construct(){
+
+        $this->helper = new Helpers();
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -47,6 +55,7 @@ class LeaveController extends ApiController
      */
     public function store(Request $request)
     {
+
         $validator = Validator::make($request->all(), Leave::createRules());
 
         if ($validator->fails()) {
@@ -55,7 +64,7 @@ class LeaveController extends ApiController
 
         $leave = new Leave();
         $leave->user_id           = $request->user;
-        $leave->attachment        = $request->attachment;
+        $leave->attachment        = Helpers::saveFile($request, "leave_attachment");
         $leave->last_day_of_work  = $request->last_day_of_work;
         $leave->from_date         = $request->from_date;
         $leave->to_date           = $request->to_date;
@@ -102,8 +111,13 @@ class LeaveController extends ApiController
         if ($validator->fails()) {
             return $this->errorResponse($validator->errors(), 400);
         }
+        $file = isset($request->attachment) ? $request->attachment : [];
+        $path = isset($request->old_attachment) ? $request->old_attachment : null;
+        if(isset($file['extension']) && isset($file['data_url']) && $file['extension'] != "" && $file['data_url'] != ""){
+            $path = Helpers::saveFile($request, "leave_attachment");
+        }
 
-        $leave->attachment        = $request->attachment;
+        $leave->attachment        = $path;
         $leave->last_day_of_work  = $request->last_day_of_work;
         $leave->from_date         = $request->from_date;
         $leave->to_date           = $request->to_date;

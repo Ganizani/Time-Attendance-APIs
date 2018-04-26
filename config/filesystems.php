@@ -55,6 +55,13 @@ return [
             'visibility' => 'public',
         ],
 
+        'leave_attachment' => [
+            'driver'     => 'local',
+            'root'       => storage_path('app/public/leave_attachment'),
+            'url'        => env('APP_URL').'/storage/leave_attachment',
+            'visibility' => 'public',
+        ],
+
         's3' => [
             'driver' => 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),

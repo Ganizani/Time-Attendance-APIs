@@ -447,7 +447,7 @@ class UserController extends ApiController
     {
         if(!isset($request->email) || !isset($request->password)  || ($request->password == "" || $request-> email == "")){
             $export = [
-                'success' => 1,
+                'success' => 0,
                 'email'   => $request->email,
                 'message' => "Please Enter All Required Fields",
             ];
