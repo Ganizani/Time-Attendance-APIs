@@ -137,15 +137,12 @@ class Handler extends ExceptionHandler
         //Code for Handling any other General QUERY Exception
         if($exception instanceof QueryException){
 
-            //dd($exception); - >Debbuger like die() in php
-
             $errorCode = $exception->errorInfo[1];
             if($errorCode == 1451){
                 return $this->errorResponse("Cannot remove this resource permanently. It is related with other resources", 409);
             }
+            else return $this->errorResponse($exception->getMessage(), 500);
         }
-
-
 
         //Code for Handling any other Token Missmatch Exception
         if($exception instanceof TokenMismatchException){
