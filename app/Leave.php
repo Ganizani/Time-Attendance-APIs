@@ -36,6 +36,7 @@ class Leave extends Model
         'email_on_leave',
         'phone_on_leave',
         'processed_by',
+        'leave_type_text',
         'created_at',
         'updated_at',
         'created_by',
@@ -83,6 +84,7 @@ class Leave extends Model
             'address_on_leave' => 'sometimes|nullable',
             'email_on_leave'   => 'sometimes|nullable|email',
             'phone_on_leave'   => 'sometimes|nullable',
+            'specific_leave_type'  => 'sometimes|nullable'
         ];
     }
 
@@ -99,6 +101,7 @@ class Leave extends Model
             'address_on_leave' => 'sometimes|nullable',
             'email_on_leave'   => 'sometimes|nullable|email',
             'phone_on_leave'   => 'sometimes|nullable',
+            'specific_leave_type'  => 'sometimes|nullable',
         ];
     }
 
@@ -115,8 +118,9 @@ class Leave extends Model
 
     //Models
     public static function model($item){
-       $to = Carbon::parse($item->to_date);
-       $from =  Carbon::parse($item->from_date);
+       $to   = Carbon::parse($item->to_date);
+       $from = Carbon::parse($item->from_date);
+
         return  [
             'id'                => $item->id,
             'user_id'           => $item->user_id,
@@ -129,6 +133,7 @@ class Leave extends Model
             'from_date'         => Helpers::formatDate($item->from_date, "Y-m-d"),
             'to_date'           => Helpers::formatDate($item->to_date, "Y-m-d"),
             'leave_type'        => LeaveType::info($item->leave_type),
+            'leave_type_text'   => $item->leave_type_text,
             'leave_days'        => $from->diffInDays($to),
             'user'              => User::info($item->user_id),
             'created_at'        => Helpers::formatDate($item->created_at),

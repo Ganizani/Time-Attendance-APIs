@@ -78,7 +78,7 @@ class DatabaseSeeder extends Seeder
         $dates       = ['2018-04-01', '2018-04-02', '2018-04-03', '2018-04-04', '2018-04-05', '2018-04-06', '2018-04-07',
                         '2018-04-08', '2018-04-09', '2018-04-10', '2018-04-11', '2018-04-12', '2018-04-13', '2018-04-16',
                         '2018-04-17', '2018-04-18', '2018-04-19', '2018-04-20', '2018-04-23', '2018-04-24', '2018-04-25'];
-        $leave_types = ['Annual Leave/Vacation','Sick Leave', 'Family Responsibility Leave', 'Maternity Leave', 'Study Leave'];
+        $leave_types = ['Annual Leave/Vacation','Sick Leave', 'Family Responsibility Leave', 'Maternity Leave', 'Study Leave', 'Other'];
         $devices = ['862037029010294', '354082061038709', '354082061038691', '864121017029017', '862037029010518'];
 
         $departments = ['Sales'];

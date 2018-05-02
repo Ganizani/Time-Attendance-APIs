@@ -26,6 +26,7 @@ class CreateLeavesTable extends Migration
             $table->string('email_on_leave')->nullable(true);
             $table->string('phone_on_leave')->nullable(true);
             $table->string('processed_by')->nullable(true);
+            $table->string('leave_type_text')->nullable(true);
             $table->string('created_by')->nullable(true);
             $table->string('updated_by')->nullable(true);
             $table->timestamps();

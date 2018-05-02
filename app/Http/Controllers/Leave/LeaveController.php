@@ -73,6 +73,7 @@ class LeaveController extends ApiController
         $leave->address_on_leave  = $request->address_on_leave;
         $leave->email_on_leave    = $request->email_on_leave;
         $leave->phone_on_leave    = $request->phone_on_leave;
+        $leave->leave_type_text   = $request->specific_leave_type;
         $leave->created_by        = $request->user()->id;
         $leave->created_at        = Carbon::now('CAT');
         $leave->updated_at        = null;
@@ -126,6 +127,7 @@ class LeaveController extends ApiController
         $leave->address_on_leave  = $request->address_on_leave;
         $leave->email_on_leave    = $request->email_on_leave;
         $leave->phone_on_leave    = $request->phone_on_leave;
+        $leave->leave_type_text   = $request->specific_leave_type;
 
         if($leave->isClean()){ //if the site has not changed
             return $this->errorResponse('You need to specify a different value to update',400);
