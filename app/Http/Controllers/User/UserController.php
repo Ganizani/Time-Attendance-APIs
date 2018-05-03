@@ -60,6 +60,32 @@ class UserController extends ApiController
         return $this->showList(collect($users));
     }
 
+    public function list(Request $request)
+    {
+        $users  = [];
+        $WHEREDepartment = $WHERESearch = "";
+        if(isset($request->department) && $request->department != "") {
+            $WHEREDepartment = " AND u.department_id = '{$request->department}'";
+        }
+//CONCAT(u.title, ' ', u.first_name, ' ', u.last_name) AS Name
+
+        $query = "SELECT u.*, CONCAT_WS(' ', u.title, u.first_name, u.last_name) AS Name
+                  FROM   users u
+                  WHERE  u.deleted_at IS NULL {$WHEREDepartment}";
+
+        $result = DB::select($query);
+
+        foreach($result as $item){
+            $users [] = [
+                'id'   => $item->id,
+                'name' => $item->Name,
+            ];
+        }
+
+        //return
+        return $this->showList(collect($users));
+    }
+
     /**
      * Display a listing of the resource.
      *

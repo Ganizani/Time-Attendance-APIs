@@ -61,9 +61,9 @@ class Device extends Model
         return [
             'name'          => 'required|unique:devices,name',
             'imei_number'   => 'required|unique:devices,imei_number',
-            'serial_number' => 'required|unique:devices,serial_number',
+            'serial_number' => 'sometimes|nullable',
             'status'        => 'sometimes|nullable|in:' .Device::ACTIVE . ',' .Device::DEACTIVATED,
-            'department_id' => 'required|exists:departments,id',
+            'department' => 'required|exists:departments,id',
             'supervisor'    => 'required|exists:users,id',
         ];
     }
@@ -73,9 +73,9 @@ class Device extends Model
         return [
             'name'          => 'required|unique:devices,name,'.$id,
             'imei_number'   => 'required|unique:devices,imei_number,'.$id,
-            'serial_number' => 'required|unique:devices,serial_number,'.$id,
+            'serial_number' => 'sometimes|nullable',
             'status'        => 'sometimes|nullable|in:' .Device::ACTIVE . ',' .Device::DEACTIVATED,
-            'department_id' => 'required|exists:departments,id',
+            'department' => 'required|exists:departments,id',
             'supervisor'    => 'required|exists:users,id',
         ];
     }

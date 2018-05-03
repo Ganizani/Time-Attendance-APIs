@@ -17,6 +17,7 @@ use Illuminate\Http\Request;
 Route::get('users/leave', 'User\UserController@leave_count')->middleware('auth:api');
 Route::get('users/absent', 'User\UserController@absent_count')->middleware('auth:api');
 Route::get('users/active', 'User\UserController@active_count')->middleware('auth:api');
+Route::get('users/list/all', 'User\UserController@list')->middleware('auth:api');
 Route::get('users', 'User\UserController@index')->middleware('auth:api');
 Route::get('users/recently', 'User\UserController@recently')->middleware('auth:api');
 Route::get('users/{id}','User\UserController@show')->middleware('auth:api');
