@@ -97,9 +97,10 @@ class Record extends Model
 
     public static function createRules(){
 
+        //|exists:devices,imei_number
         return [
             'user'        => 'required|exists:users,id',
-            'imei_number' => 'sometimes|nullable|exists:devices,imei_number',
+            'imei_number' => 'sometimes|nullable',
             'date'        => 'required|date_format:"Y-m-d"',
             'time'        => 'required|date_format:"H:s:i"',
             'latitude'    => 'required',
