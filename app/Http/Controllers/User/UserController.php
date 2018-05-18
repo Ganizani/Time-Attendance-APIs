@@ -246,6 +246,8 @@ class UserController extends ApiController
         $spouse->created_at     = Carbon::now('CAT');
         $spouse->save();
 
+        //Password
+        $password = isset($request->password) ? $request->password : "Test@123";
         $user = new User();
         $user->employee_code        = $request->employee_code;
         $user->title                = $request->title;
@@ -279,7 +281,7 @@ class UserController extends ApiController
         $user->spouse_id            = $spouse->id;
         $user->next_of_kin_id       = $next_of_kin->id;
         $user->profile_picture      = $request->profile_picture;
-        $user->password             = User::encryptPassword($request->password);
+        $user->password             = User::encryptPassword($password);
         $user->status               = User::ACTIVE;
         $user->verified             = User::UNVERIFIED;
         $user->verification_token   = User::generateVerificationToken();
