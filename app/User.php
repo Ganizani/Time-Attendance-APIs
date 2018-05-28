@@ -109,9 +109,7 @@ class User extends Authenticatable
 
     public static function isDeleted($id){
 
-        $count = User::where('id', $id)
-            ->where('deleted_at', '!=', null)
-            ->count();
+        $count = User::where('id', $id)->where('deleted_at', '!=', null)->count();
 
         $valid_token = ($count > 0) ? true : false;
 
@@ -120,9 +118,7 @@ class User extends Authenticatable
 
     public static function isVerified($id){
 
-        $count = User::where('id', $id)
-            ->where('verified', User::VERIFIED)
-            ->count();
+        $count = User::where('id', $id)->where('verified', User::VERIFIED)->count();
 
         $valid_token = ($count > 0) ? true : false;
 
@@ -202,7 +198,7 @@ class User extends Authenticatable
 
         $item = User::where('id', $id)->first();
 
-        if(count($item) <= 0) return null;
+        if(!isset($item)) return null;
 
         return [
             'id'                   => $item->id,

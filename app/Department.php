@@ -107,7 +107,7 @@ class Department extends Model
 
         $item = Department::where('id', $id)->first();
 
-        if(count($item) <= 0) return null;
+        if(!isset($item)) return null;
 
         return [
             'id'          => $item->id,

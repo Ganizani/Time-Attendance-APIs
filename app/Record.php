@@ -42,9 +42,7 @@ class Record extends Model
     //Functions
     public static function countClockingByIdDate($date = "", $user_id = ""){
 
-        $records = Record::where('user_id', $user_id)
-            ->where('date', $date)
-            ->count();
+        $records = Record::where('user_id', $user_id)->where('date', $date)->count();
 
         return $records;
     }
@@ -53,20 +51,15 @@ class Record extends Model
 
         $order = ($status != "" && $status == "IN")? "ASC" : "DESC";
 
-        $record = Record::where('user_id', $user_id)
-            ->where('date', $date)
-            ->orderBy('time', $order)
-            ->first();
+        $record = Record::where('user_id', $user_id)->where('date', $date)->orderBy('time', $order)->first();
 
         return $record;
     }
 
     public static function getDate($from = "", $to = ""){
 
-        $records = Record::select('date')
-            ->whereBetween('date', [$from, $to])
-            ->groupBy('date')
-            ->get();
+        $records = Record::select('date')->whereBetween('date', [$from, $to])->groupBy('date')->get();
+
         return $records;
     }
 

@@ -29,7 +29,7 @@ class PasswordReset extends Model
 
         $count = PasswordReset::where('token', $token)
             ->where('email', $email)
-            ->where('expire_at', '>', Carbon::now())
+            ->where('expire_at', '>', Carbon::now('CAT'))
             ->count();
         $valid_token = ($count > 0) ? "true" : "false";
 

@@ -74,19 +74,16 @@ class Spouse extends Model
     public static function info($id){
         $item = Spouse::where('id', $id)->first();
 
-        if(!isset($item)){
-            return null;
-        }
-        else {
-            return [
-                'id'            => $item->id,
-                'name'          => $item->name,
-                'employer'      => $item->employer,
-                'work_location' => $item->work_location,
-                'cell_phone'    => $item->cell_phone,
-                'work_phone'    => $item->work_phone
-            ];
-        }
+        if(!isset($item)) return null;
+
+        return [
+            'id'            => $item->id,
+            'name'          => $item->name,
+            'employer'      => $item->employer,
+            'work_location' => $item->work_location,
+            'cell_phone'    => $item->cell_phone,
+            'work_phone'    => $item->work_phone
+        ];
     }
 
     public static function model($item){

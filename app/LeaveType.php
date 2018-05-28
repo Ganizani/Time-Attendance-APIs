@@ -67,7 +67,9 @@ class LeaveType extends Model
     //Models
     public static function info($id){
 
-        $item = LeaveType::find($id);
+        $item = LeaveType::where('id', $id)->first();
+
+        if(!isset($item)) return null;
 
         return  [
             'id'           => $item->id,

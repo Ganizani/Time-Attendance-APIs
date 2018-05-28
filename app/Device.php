@@ -63,7 +63,7 @@ class Device extends Model
             'imei_number'   => 'required|unique:devices,imei_number',
             'serial_number' => 'sometimes|nullable',
             'status'        => 'sometimes|nullable|in:' .Device::ACTIVE . ',' .Device::DEACTIVATED,
-            'department' => 'required|exists:departments,id',
+            'department'    => 'required|exists:departments,id',
             'supervisor'    => 'required|exists:users,id',
         ];
     }
@@ -86,7 +86,7 @@ class Device extends Model
 
         $item = Device::where('id', $id)->orWhere('imei_number', $id)->first();
 
-        if(count($item) <= 0) return null;
+        if(!isset($item)) return null;
 
         return  [
             'id'            => $item->id,

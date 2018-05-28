@@ -77,22 +77,19 @@ class Address extends Model
     public static function info($id){
         $item = Address::where('id', $id)->first();
 
-        if(!isset($item)){
-            return null;
-        }
-        else {
-            return [
-                'id'            => $item->id,
-                'house_number'  => $item->house_no,
-                'street_number' => $item->street_no,
-                'street_name'   => $item->street_name,
-                'suburb'        => $item->suburb,
-                'city'          => $item->city,
-                'province'      => $item->province,
-                'country'       => $item->country,
-                'postal_code'   => $item->postal_code
-            ];
-        }
+        if(!isset($item)) return null;
+
+        return [
+            'id'            => $item->id,
+            'house_number'  => $item->house_no,
+            'street_number' => $item->street_no,
+            'street_name'   => $item->street_name,
+            'suburb'        => $item->suburb,
+            'city'          => $item->city,
+            'province'      => $item->province,
+            'country'       => $item->country,
+            'postal_code'   => $item->postal_code
+        ];
     }
 
 

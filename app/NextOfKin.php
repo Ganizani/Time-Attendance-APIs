@@ -83,23 +83,19 @@ class NextOfKin extends Model
     public static function info($id){
         $item = NextOfKin::where('id', $id)->first();
 
-        if(!isset($item)){
-            return null;
-        }
-        else {
-            return [
-                'id'            => $item->id,
-                'title'         => $item->title,
-                'first_name'    => $item->first_name,
-                'last_name'     => $item->last_name,
-                'middle_name'   => $item->middle_name,
-                'email'         => $item->email,
-                'cell_phone'    => $item->cell_phone,
-                'home_phone'    => $item->home_phone,
-                'relationship'  => $item->relationship,
-                'address'       => Address::info($item->address_id),
-            ];
-        }
+        if(!isset($item)) return null;
+        return [
+            'id'            => $item->id,
+            'title'         => $item->title,
+            'first_name'    => $item->first_name,
+            'last_name'     => $item->last_name,
+            'middle_name'   => $item->middle_name,
+            'email'         => $item->email,
+            'cell_phone'    => $item->cell_phone,
+            'home_phone'    => $item->home_phone,
+            'relationship'  => $item->relationship,
+            'address'       => Address::info($item->address_id),
+        ];
     }
 
     public static function model($item){
