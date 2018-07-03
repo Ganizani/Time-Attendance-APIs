@@ -21,6 +21,7 @@ class CreateLeavesTable extends Migration
             $table->date('last_day_of_work')->nullable(true);
             $table->date('from_date')->nullable(true);
             $table->date('to_date')->nullable(true);
+            $table->integer('leave_days')->nullable(true)->default(0);
             $table->string('leave_type')->nullable(true);
             $table->string('address_on_leave')->nullable(true);
             $table->string('email_on_leave')->nullable(true);

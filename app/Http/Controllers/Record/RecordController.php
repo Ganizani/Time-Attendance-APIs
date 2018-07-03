@@ -79,7 +79,7 @@ class RecordController extends ApiController
 
         $results = DB::select("SELECT r.*
                                FROM   records r, users u
-                               WHERE  r.user_id = u.id AND r.date = '$today' {$WHEREDepartment}
+                               WHERE  r.user_id = u.id {$WHEREDepartment}
                                ORDER BY r.time DESC LIMIT 20");
 
         foreach($results as $item){

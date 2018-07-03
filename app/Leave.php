@@ -37,6 +37,7 @@ class Leave extends Model
         'phone_on_leave',
         'processed_by',
         'leave_type_text',
+        'leave_days',
         'created_at',
         'updated_at',
         'created_by',
@@ -67,6 +68,14 @@ class Leave extends Model
         $result = LeaveType::where('leave_type',$leave_type)->first();
 
         return $result;
+    }
+
+    public static function getDaysDifference($from, $to){
+
+        $to_date    = Carbon::parse($to);
+        $from_date  = Carbon::parse($from);
+
+        return abs($from_date->diffInDays($to_date)) + 1;
     }
 
 
@@ -118,8 +127,6 @@ class Leave extends Model
 
     //Models
     public static function model($item){
-       $to   = Carbon::parse($item->to_date);
-       $from = Carbon::parse($item->from_date);
 
         return  [
             'id'                => $item->id,
@@ -134,7 +141,7 @@ class Leave extends Model
             'to_date'           => Helpers::formatDate($item->to_date, "Y-m-d"),
             'leave_type'        => LeaveType::info($item->leave_type),
             'leave_type_text'   => $item->leave_type_text,
-            'leave_days'        => $from->diffInDays($to),
+            'leave_days'        => $item->leave_days,
             'user'              => User::info($item->user_id),
             'created_at'        => Helpers::formatDate($item->created_at),
             'updated_at'        => Helpers::formatDate($item->updated_at),

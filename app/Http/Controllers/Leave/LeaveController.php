@@ -68,6 +68,7 @@ class LeaveController extends ApiController
         $leave->last_day_of_work  = $request->last_day_of_work;
         $leave->from_date         = $request->from_date;
         $leave->to_date           = $request->to_date;
+        $leave->leave_days        = Leave::getDaysDifference($request->from_date, $request->to_date);
         $leave->comments          = $request->comments;
         $leave->leave_type        = $request->leave_type;
         $leave->address_on_leave  = $request->address_on_leave;
@@ -122,6 +123,7 @@ class LeaveController extends ApiController
         $leave->last_day_of_work  = $request->last_day_of_work;
         $leave->from_date         = $request->from_date;
         $leave->to_date           = $request->to_date;
+        $leave->leave_days        = Leave::getDaysDifference($request->from_date, $request->to_date);
         $leave->comments          = $request->comments;
         $leave->leave_type        = $request->leave_type;
         $leave->address_on_leave  = $request->address_on_leave;

@@ -463,12 +463,15 @@ class UserController extends ApiController
         if(Auth::attempt(['email' => $request->email, 'password' => $request->password])){
             // Authentication passed...
             $user = Auth::user();
-            $token =  $user->createToken('Ganizani - Time Attendance Password Grant Client')->accessToken;
-            return $this->showOne(collect(User::model($user, $token)));
+
+            //Only log in if user is manager
+            if($user->user_type == 1) {
+                $token = $user->createToken('Ganizani - Time Attendance Password Grant Client')->accessToken;
+                return $this->showOne(collect(User::model($user, $token)));
+            }
+            else return $this->errorResponse( "Please contact System Admin", 401);
         }
-        else{
-            return $this->errorResponse( "Invalid Login Credentials", 401);
-        }
+        else return $this->errorResponse( "Invalid Login Credentials", 401);
     }
 
     public function mobile_login(Request $request)
