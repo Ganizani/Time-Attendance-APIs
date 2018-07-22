@@ -247,7 +247,7 @@ class UserController extends ApiController
         $spouse->save();
 
         //Password
-        $password = isset($request->password) ? $request->password : "Test@123";
+        $password = isset($request->password) ? $request->password : ucfirst(strtolower(str_replace(" ", "", $request->last_name)))."@123";
         $user = new User();
         $user->employee_code        = $request->employee_code;
         $user->title                = $request->title;
