@@ -153,7 +153,7 @@ class RecordController extends ApiController
         $address = $Helper->getAddressFromGoogle($request->latitude, $request->longitude);
 
         $record = new Record();
-        $record->user_id       = $request->user()->id;
+        $record->user_id       = $user->id;
         $record->imei_number   = null;
         $record->date          = Helpers::formatDate(Carbon::now('CAT'), "Y-m-d");
         $record->time          = Helpers::formatDate(Carbon::now('CAT'), "H:i:s");
