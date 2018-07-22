@@ -80,7 +80,8 @@ class RecordController extends ApiController
         $results = DB::select("SELECT r.*
                                FROM   records r, users u
                                WHERE  r.user_id = u.id {$WHEREDepartment}
-                               ORDER BY r.time DESC LIMIT 20");
+                               ORDER BY r.date DESC, r.time DESC
+                               LIMIT 20");
 
         foreach($results as $item){
             $records [] = Record::model($item);
@@ -106,6 +107,10 @@ class RecordController extends ApiController
             return $this->errorResponse($validator->errors(), 400);
         }
 
+        //MAKE GOOGLE CALL TO GET ADDRESS
+        $Helper  = new Helpers();
+        $address = $Helper->getAddressFromGoogle($request->latitude, $request->longitude);
+
         $record = new Record();
         $record->user_id       = $request->user;
         $record->imei_number   = $request->imei_number;
@@ -113,6 +118,7 @@ class RecordController extends ApiController
         $record->time          = $request->time;
         $record->latitude      = $request->latitude;
         $record->longitude     = $request->longitude;
+        $record->address       = $address;
         $record->status        = $request->status;
         $record->created_at    = Carbon::now('CAT');
         $record->updated_at    = null;
@@ -142,6 +148,10 @@ class RecordController extends ApiController
         }
         else return $this->errorResponse( "Invalid Login Credentials", 401);
 
+        //MAKE GOOGLE CALL TO GET ADDRESS
+        $Helper  = new Helpers();
+        $address = $Helper->getAddressFromGoogle($request->latitude, $request->longitude);
+
         $record = new Record();
         $record->user_id       = $request->user()->id;
         $record->imei_number   = null;
@@ -150,6 +160,7 @@ class RecordController extends ApiController
         $record->latitude      = $request->latitude;
         $record->longitude     = $request->longitude;
         $record->status        = $request->status;
+        $record->address       = $address;
         $record->created_at    = Carbon::now();
         $record->updated_at    = null;
         $record->save();
@@ -160,6 +171,10 @@ class RecordController extends ApiController
 
     public function mobile_clock(Request $request)
     {
+        //MAKE GOOGLE CALL TO GET ADDRESS
+        $Helper  = new Helpers();
+        $address = $Helper->getAddressFromGoogle($request->latitude, $request->longitude);
+
         $record = new Record();
         $record->user_id       = $request->user_id;
         $record->imei_number   = null;
@@ -168,6 +183,7 @@ class RecordController extends ApiController
         $record->latitude      = $request->latitude;;
         $record->longitude     = $request->longitude;
         $record->status        = $request->status;
+        $record->address       = $address;
         $record->created_at    = Carbon::now('CAT');
         $record->updated_at    = null;
         $record->save();

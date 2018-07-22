@@ -28,6 +28,7 @@ class Record extends Model
         'time',
         'longitude',
         'latitude',
+        'address',
         'imei_number',
         'created_at'
     ];
@@ -147,6 +148,7 @@ class Record extends Model
             'time'          => Helpers::formatDate($item->time, "H:i:s"),
             'latitude'      => $item->latitude,
             'longitude'     => $item->longitude,
+            'address'       => $item->address,
             'status'        => $item->status,
             'user'          => User::info($item->user_id),
             'device'        => Device::info($item->imei_number),
@@ -161,6 +163,7 @@ class Record extends Model
             'time'          => Helpers::formatDate($item->time, "H:i:s"),
             'latitude'      => $item->latitude,
             'longitude'     => $item->longitude,
+            'address'       => $item->address,
             'status'        => $item->status,
             'user'          => User::info($item->user_id),
             'device'        => Device::info($item->imei_number),

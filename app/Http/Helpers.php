@@ -13,9 +13,34 @@ use DateTime;
 use DateInterval;
 use DatePeriod;
 use Illuminate\Support\Facades\Storage;
+use GuzzleHttp;
 
 class Helpers
 {
+    public $google_api_key;
+
+    function __construct(){
+        $this->google_api_key =  env('GOOGLE_KEY');
+    }
+
+    public function getAddressFromGoogle($latitude, $longitude){
+
+        $address = "N/a";
+        $client = new GuzzleHttp\Client();
+        $url    = "https://maps.googleapis.com/maps/api/geocode/json?latlng={$latitude},{$longitude}&sensor=true&key={$this->google_api_key}";
+        $result = $client->request('GET', $url);
+
+        //Successful
+        if($result->getStatusCode() == "200" || $result->getStatusCode() == 200){
+            $data = json_decode($result->getBody(), true);
+            if($data['status'] == "OK" && isset($data['results'][0]['formatted_address']) && $data['results'][0]['formatted_address'] != ""){
+                $address = $data['results'][0]['formatted_address'];
+            }
+        }
+
+        //return
+        return $address;
+    }
 
     public static function PasswordRegex($password, $confirm_password){
 
