@@ -210,7 +210,7 @@ class UserController extends ApiController
 
         //Insert Next of Kin Address
         $nok_address = new Address();
-        $nok_address_data = $request->next_of_kin['address'];
+        $nok_address_data           = $request->next_of_kin['address'];
         $nok_address->house_no      = $nok_address_data['house_number'];
         $nok_address->street_no     = $nok_address_data['street_number'];
         $nok_address->street_name   = $nok_address_data['street_name'];
@@ -260,7 +260,6 @@ class UserController extends ApiController
         $user->nationality          = $request->nationality;
         $user->supervisor           = $request->supervisor;
         $user->gender               = $request->gender;
-        $user->user_type            = $request->user_type;
         $user->phone_number         = $request->phone_number;
         $user->email                = $request->email;
         $user->nationality          = $request->nationality;
@@ -280,6 +279,10 @@ class UserController extends ApiController
         $user->address_id           = $address->id;
         $user->spouse_id            = $spouse->id;
         $user->next_of_kin_id       = $next_of_kin->id;
+        //Only update User Type if it's set
+        if(isset($request->user_type) && $request->user_type != ""){
+            $user->user_type = $request->user_type;
+        }
         $user->profile_picture      = $request->profile_picture;
         $user->password             = User::encryptPassword($password);
         $user->status               = User::ACTIVE;
@@ -343,7 +346,6 @@ class UserController extends ApiController
         $user->nationality          = $request->nationality;
         $user->supervisor           = $request->supervisor;
         $user->gender               = $request->gender;
-        $user->user_type            = $request->user_type;
         $user->phone_number         = $request->phone_number;
         $user->email                = $request->email;
         $user->nationality          = $request->nationality;
@@ -362,12 +364,20 @@ class UserController extends ApiController
         $user->payment_number       = $request->payment_number;
         $user->updated_at           = Carbon::now('CAT');
         $user->updated_by           = $request->user()->id;
+        //Only update User Type if it's set
+        if(isset($request->user_type) && $request->user_type != ""){
+            $user->user_type = $request->user_type;
+        }
+
         if($request->has('password') && $request->password != ""){
             $user->password = User::encryptPassword($request->password);
         }
 
         //Update Address
-        $address = Address::where('id', $user->address_id)->firstOrFail();
+        $address = Address::where('id', $user->address_id)->first();
+        if(!$address){
+            $address = new Address();
+        }
         $address->house_no      = $request->address['house_number'];
         $address->street_no     = $request->address['street_number'];
         $address->street_name   = $request->address['street_name'];
@@ -378,7 +388,10 @@ class UserController extends ApiController
         $address->updated_by    = $request->user()->id;
 
         //Update Next of Kin
-        $next_of_kin = NextOfKin::where('id', $user->next_of_kin_id)->firstOrFail();
+        $next_of_kin = NextOfKin::where('id', $user->next_of_kin_id)->first();
+        if(!$next_of_kin){
+            $next_of_kin = new NextOfKin();
+        }
         $next_of_kin->first_name    = $request->next_of_kin['first_name'];
         $next_of_kin->last_name     = $request->next_of_kin['last_name'];
         $next_of_kin->middle_name   = $request->next_of_kin['middle_name'];
@@ -390,8 +403,10 @@ class UserController extends ApiController
         $next_of_kin->updated_by    = $request->user()->id;
 
         //Update Next of Kin Address
-
-        $nok_address = Address::where('id', $next_of_kin->address_id)->firstOrFail();
+        $nok_address = NextOfKin::where('id', $next_of_kin->next_of_kin_id)->first();
+        if(!$nok_address){
+            $nok_address = new Address();
+        }
         $nok_address_data           = $request->next_of_kin['address'];
         $nok_address->house_no      = $nok_address_data['house_number'];
         $nok_address->street_no     = $nok_address_data['street_number'];
@@ -403,7 +418,10 @@ class UserController extends ApiController
         $nok_address->updated_by    = $request->user()->id;
 
         //Insert Spouse
-        $spouse = Spouse::where('id', $user->spouse_id)->firstOrFail();
+        $spouse = Spouse::where('id', $user->spouse_id)->first();
+        if(!$spouse){
+            $spouse = new Spouse();
+        }
         $spouse->name           = $request->spouse['name'];
         $spouse->employer       = $request->spouse['employer'];
         $spouse->work_location  = $request->spouse['work_location'];
@@ -413,11 +431,16 @@ class UserController extends ApiController
         $spouse->updated_by     = $request->user()->id;
 
         //Saves
-        $user->save();
         $spouse->save();
         $nok_address->save();
         $next_of_kin->save();
         $address->save();
+
+        if($address->id != $user->address_id)            $user->address_id        = $address->id;
+        if($spouse->id != $user->spouse_id)              $user->spouse_id         = $spouse->id;
+        if($next_of_kin->id != $user->next_of_kin_id)    $user->next_of_kin_id    = $next_of_kin->id;
+        if($nok_address->id != $next_of_kin->address_id) $next_of_kin->address_id = $nok_address->id;
+        $user->save();
 
         return $this->showOne(Collect(User::model($user)),200);
     }
