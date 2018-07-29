@@ -80,3 +80,10 @@ Route::post('reports/attendance','Report\ReportController@attendance')->middlewa
 Route::post('reports/base', 'Report\ReportController@base')->middleware('auth:api');
 Route::post('reports/leave', 'Report\ReportController@leave')->middleware('auth:api');
 Route::post('reports/map', 'Report\ReportController@map')->middleware('auth:api');
+
+//Access Control AND User Group
+Route::get('user_group', 'User\UserGroupController@index')->middleware('auth:api');
+Route::get('user_group/{id}','User\UserGroupController@show')->middleware('auth:api');
+Route::post('user_group', 'User\UserGroupController@store')->middleware('auth:api');
+Route::put('user_group/{id}', 'User\UserGroupController@update')->middleware('auth:api');
+Route::delete('user_group/{id}', 'User\UserGroupController@destroy')->middleware('auth:api');
