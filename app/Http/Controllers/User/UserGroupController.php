@@ -102,7 +102,7 @@ class UserGroupController extends ApiController
 
         //Validate Access Control
         $access_control_data = $request->access_control;
-        $access_control_id   = isset($access_control_data['id']) ? $access_control_data['id'] : null;
+        $access_control_id   = isset($access_control_data['access_control_id']) ? $access_control_data['access_control_id'] : null;
         $validator = Validator::make($request->access_control, AccessControl::updateRules($access_control_id));
         if ($validator->fails()) return $this->errorResponse($validator->errors(), 400);
 
@@ -111,11 +111,11 @@ class UserGroupController extends ApiController
         $user_group->description = $request->description;
 
         //Update Access Control
-        $access_control = AccessControl::map_data($user_group->id, $request);
+        $access_control = AccessControl::map_data($user_group->id, $request, "edit", $access_control_id);
 
-        if($user_group->isClean() && $access_control->isClean()){ //if the site has not changed
+        /*if($user_group->isClean() && $access_control->isClean()){ //if the site has not changed
             return $this->errorResponse('You need to specify a different value to update',400);
-        }
+        }*/
         $user_group->updated_by = $request->user()->id;
         $user_group->updated_at = Carbon::now('CAT');
         $user_group->save();

@@ -37,7 +37,12 @@ class UserGroup extends Model
     protected $hidden = [];
 
     //Functions
+    public static function userCount($id){
+        $count = User::where('user_type', $id)->count();
 
+        //return
+        return $count;
+    }
     //Rules
     public static function createRules(){
 
@@ -76,6 +81,7 @@ class UserGroup extends Model
             'id'             => $item->id,
             'name'           => $item->name,
             'description'    => $item->description,
+            'user_count'     => UserGroup::userCount($item->id),
             'access_control' => AccessControl::info($item->id)
         ];
     }

@@ -9,6 +9,7 @@
 namespace App\Http\Controllers\User;
 ;
 
+use App\AccessControl;
 use App\Address;
 use App\Http\Controllers\ApiController;
 use App\Leave;
@@ -17,6 +18,7 @@ use App\NextOfKin;
 use App\PasswordReset;
 use App\Spouse;
 use App\User;
+use App\UserGroup;
 use Carbon\Carbon;
 use App\Http\Helpers;
 use Illuminate\Support\Facades\Auth;
@@ -315,6 +317,29 @@ class UserController extends ApiController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+    public function update_password(Request $request, $id)
+    {
+        $user = User::where('id', $id)->firstOrFail();
+
+        $validator = Validator::make($request->all(), User::updatePasswordRules());
+        if ($validator->fails()) return $this->errorResponse($validator->errors(), 400);
+
+        //Update User
+        $user->password   = User::encryptPassword($request->password);
+        $user->updated_by = $request->user()->id;
+        $user->updated_at = Carbon::now('CAT');
+        $user->save();
+
+        //return
+        return $this->showOne(Collect(User::model($user)),200);
+    }
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
     public function update(Request $request, $id)
     {
         $user = User::where('id', $id)->firstOrFail();
@@ -486,9 +511,10 @@ class UserController extends ApiController
         if(Auth::attempt(['email' => $request->email, 'password' => $request->password])){
             // Authentication passed...
             $user = Auth::user();
+            $permissions = AccessControl::info($user->user_type);
 
-            //Only log in if user is manager
-            if($user->user_type == 1) {
+            //Only If the access group has login permission
+            if(isset($permissions['login']) && $permissions['login'] == 1) {
                 $token = $user->createToken('Ganizani - Time Attendance Password Grant Client')->accessToken;
                 return $this->showOne(collect(User::model($user, $token)));
             }

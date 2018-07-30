@@ -133,6 +133,14 @@ class User extends Authenticatable
     }
 
     //Rules
+    public static function updatePasswordRules(){
+
+        return [
+            'password' => 'required|confirmed|min:5',
+        ];
+    }
+
+
     public static function createRules(){
 
         return [
@@ -141,6 +149,7 @@ class User extends Authenticatable
             'status'            => 'required|in:' . User::ACTIVE . ',' . User::DEACTIVATED ,
             'first_name'        => 'required|max:255',
             'last_name'         => 'required|max:255',
+            'user_type'         => 'required|exists:user_groups,id',
             'employee_code'     => 'sometimes|nullable|max:255',
             'department'        => 'required|exists:departments,id',
             'uif_number'        => 'sometimes|nullable',
@@ -163,6 +172,7 @@ class User extends Authenticatable
             'last_name'         => 'required|max:255',
             'employee_code'     => 'sometimes|nullable|max:255',
             'department'        => 'required|exists:departments,id',
+            'user_type'         => 'required|exists:user_groups,id',
             'uif_number'        => 'sometimes|nullable',
             'payment_number'    => 'sometimes|nullable',
             'work_location'     => 'required',
@@ -194,6 +204,36 @@ class User extends Authenticatable
     }
 
     //Models
+
+    public static function supervisor_info($id){
+
+        $item = User::where('id', $id)->first();
+
+        if(!isset($item)) return null;
+
+        return [
+            'id'                   => $item->id,
+            'employee_code'        => $item->employee_code,
+            'id_number'            => $item->id_number,
+            'title'                => $item->title,
+            'first_name'           => $item->first_name,
+            'last_name'            => $item->last_name,
+            'user_type'            => $item->user_type,
+            'email'                => $item->email,
+            'status'               => $item->status,
+            'department_id'        => $item->department_id,
+            'work_cell_phone'      => $item->work_cell_phone,
+            'work_phone'           => $item->work_phone,
+            'work_location'        => $item->work_location,
+            'start_date'           => Helpers::formatDate($item->start_date, "Y-m-d"),
+            'job_title'            => $item->job_title,
+            'work_email'           => $item->work_email,
+            'home_phone'           => $item->home_phone,
+            'department'           => Department::info($item->department_id),
+        ];
+        //'user_type_name'       => User::getUserTypeName($item->user_type),
+    }
+
     public static function info($id){
 
         $item = User::where('id', $id)->first();
@@ -227,6 +267,7 @@ class User extends Authenticatable
             'work_email'           => $item->work_email,
             'home_phone'           => $item->home_phone,
             'verified'             => $item->verified,
+            'user_group'           => UserGroup::info($item->user_type),
             'next_of_kin'          => NextOfKin::info($item->next_of_kin_id),
             'address'              => Address::info($item->address_id),
             'spouse'               => Spouse::info($item->spouse_id),
@@ -268,16 +309,17 @@ class User extends Authenticatable
             'verified'             => $item->verified,
             'uif_number'           => $item->uif_number,
             'payment_number'       => $item->payment_number,
+            'user_group'           => UserGroup::info($item->user_type),
             'next_of_kin'          => NextOfKin::info($item->next_of_kin_id),
             'address'              => Address::info($item->address_id),
             'spouse'               => Spouse::info($item->spouse_id),
-            'supervisor'           => User::info($item->supervisor),
+            'supervisor'           => User::supervisor_info($item->supervisor),
             'department'           => Department::info($item->department_id),
             'profile_picture'      => $item->profile_picture,
             'token'                => $token,
-            'created_by'           => User::info($item->created_by),
+            'created_by'           => User::supervisor_info($item->created_by),
             'created_at'           => Helpers::formatDate($item->created_at),
-            'updated_by'           => User::info($item->updated_by),
+            'updated_by'           => User::supervisor_info($item->updated_by),
             'updated_at'           => Helpers::formatDate($item->updated_at),
         ];
         // 'user_type_name'       => User::getUserTypeName($item->user_type),
