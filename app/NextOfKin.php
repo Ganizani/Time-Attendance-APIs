@@ -36,7 +36,8 @@ class NextOfKin extends Model
         'created_by',
         'updated_by',
         'created_at',
-        'updated_at'
+        'updated_at',
+        'deleted_by'
     ];
 
     /**
@@ -44,9 +45,7 @@ class NextOfKin extends Model
      *
      * @var array
      */
-    protected $hidden = [
-        'deleted_at'
-    ];
+    protected $hidden = ['deleted_by', 'deleted_at'];
 
     //Functions
 

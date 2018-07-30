@@ -21,7 +21,7 @@ class CreateRecordsTable extends Migration
             $table->string('status')->nullable(true);
             $table->string('latitude')->default('0');
             $table->string('longitude')->default('0');
-            $table->text('address')->nullable(true)->default('');
+            $table->text('address')->nullable(true);
             $table->string('imei_number')->nullable(true);
             $table->timestamps();
             $table->softDeletes();

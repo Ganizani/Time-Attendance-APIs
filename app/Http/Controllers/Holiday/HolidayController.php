@@ -11,6 +11,7 @@ use App\Department;
 use App\Holiday;
 use App\Http\Controllers\ApiController;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 use Validator;
 use Illuminate\Http\Request;
 
@@ -25,12 +26,22 @@ class HolidayController extends ApiController
     /**
      * Display a listing of the resource.
      *
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $holidays = array();
-        $result = Holiday::all();
+        $holidays = [];
+        $WHEREDepartment = "";
+        if(isset($request->department) && $request->department != ""){
+            $WHEREDepartment = " AND h.department_id = {$request->department}";
+        }
+
+        $query = "SELECT h.* 
+                  FROM   holidays h
+                  WHERE  h.deleted_at IS NULL {$WHEREDepartment}";
+
+        $result = DB::select($query);
         foreach($result as $item){
             $holidays [] = Holiday::model($item);
         }
@@ -136,14 +147,18 @@ class HolidayController extends ApiController
     /**
      * Remove the specified resource from storage.
      *
+     * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request,$id)
     {
         $holiday = Holiday::where('id', $id)->firstOrFail();
+        $holiday->deleted_by = $request->user()->id;
+        $holiday->save();
         $holiday->delete();
 
+        //return
         return $this->showList(collect(Holiday::model($holiday)));
     }
 

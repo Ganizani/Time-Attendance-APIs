@@ -29,7 +29,7 @@ class LeaveType extends Model
         'created_at',
         'updated_at',
         'created_by',
-        'last_updated_by',
+        'updated_by',
     ];
 
     /**
@@ -37,7 +37,7 @@ class LeaveType extends Model
      *
      * @var array
      */
-    protected $hidden = [];
+    protected $hidden = ['deleted_by', 'deleted_at'];
 
     //Functions
     public static function getLeaveTypes($leave_type){

@@ -24,6 +24,7 @@ class CreateDevicesTable extends Migration
             $table->string('department_id')->nullable(true);
             $table->string('created_by')->nullable(true);
             $table->string('updated_by')->nullable(true);
+            $table->string('deleted_by')->nullable(true);
             $table->timestamps();
             $table->softDeletes();
 

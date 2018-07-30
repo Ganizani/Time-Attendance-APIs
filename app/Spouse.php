@@ -41,9 +41,7 @@ class Spouse extends Model
      *
      * @var array
      */
-    protected $hidden = [
-        'deleted_at'
-    ];
+    protected $hidden = ['deleted_at', 'deleted_by'];
 
     //Functions
 

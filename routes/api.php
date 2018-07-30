@@ -30,6 +30,7 @@ Route::post('users/forgot_password', 'User\UserController@forgotPassword');
 Route::post('users/reset_password', 'User\UserController@resetPassword');
 Route::post('users/login', 'User\UserController@login');
 Route::post('users/mobile/login', 'User\UserController@mobile_login');
+Route::post('users/update_password/{id}', 'User\UserController@update_password')->middleware('auth:api');
 
 //Devices
 Route::get('devices/', 'Device\DeviceController@index')->middleware('auth:api');
@@ -80,3 +81,10 @@ Route::post('reports/attendance','Report\ReportController@attendance')->middlewa
 Route::post('reports/base', 'Report\ReportController@base')->middleware('auth:api');
 Route::post('reports/leave', 'Report\ReportController@leave')->middleware('auth:api');
 Route::post('reports/map', 'Report\ReportController@map')->middleware('auth:api');
+
+//Access Control AND User Group
+Route::get('user_groups', 'User\UserGroupController@index')->middleware('auth:api');
+Route::get('user_groups/{id}','User\UserGroupController@show')->middleware('auth:api');
+Route::post('user_groups', 'User\UserGroupController@store')->middleware('auth:api');
+Route::put('user_groups/{id}', 'User\UserGroupController@update')->middleware('auth:api');
+Route::delete('user_groups/{id}', 'User\UserGroupController@destroy')->middleware('auth:api');

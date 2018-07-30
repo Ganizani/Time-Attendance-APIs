@@ -123,12 +123,15 @@ class AddressController extends ApiController
     /**
      * Remove the specified resource from storage.
      *
+     * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
         $address = Address::where('id', $id)->firstOrFail();
+        $address->deleted_by = $request->user()->id;
+        $address->save();
         $address->delete();
 
         //return

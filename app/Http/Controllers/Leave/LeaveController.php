@@ -145,15 +145,18 @@ class LeaveController extends ApiController
     /**
      * Remove the specified resource from storage.
      *
+     * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request,$id)
     {
         $leave = Leave::where('id', $id)->firstOrFail();
+        $leave->deleted_by = $request->user()->id;
+        $leave->save();
         $leave->delete();
 
         //return
-        return $this->showOne(collect(Leave::model($leave)));
+        return $this->showList(collect(Leave::model($leave)));
     }
 }

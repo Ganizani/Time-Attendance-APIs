@@ -161,15 +161,19 @@ class NextOfKinController extends ApiController
         return $this->showOne(collect(NextOfKin::model($next_of_kin)));
     }
 
+
     /**
      * Remove the specified resource from storage.
      *
+     * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
         $next_of_kin = NextOfKin::where('id', $id)->firstOrFail();
+        $next_of_kin->deleted_by = $request->user()->id;
+        $next_of_kin->save();
         $next_of_kin->delete();
 
         //return
