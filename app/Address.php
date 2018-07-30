@@ -32,7 +32,8 @@ class Address extends Model
         'city',
         'province',
         'country',
-        'postal_code'
+        'postal_code',
+        'deleted_by'
     ];
 
     /**
@@ -40,7 +41,7 @@ class Address extends Model
      *
      * @var array
      */
-    protected $hidden = [];
+    protected $hidden = ['deleted_by', 'deleted_at'];
 
     //Functions
 

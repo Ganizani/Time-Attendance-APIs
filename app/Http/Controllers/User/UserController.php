@@ -473,15 +473,19 @@ class UserController extends ApiController
     /**
      * Remove the specified resource from storage.
      *
+     * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
         $user = User::where('id', $id)->firstOrFail();
+        $user->deleted_by = $request->user()->id;
+        $user->save();
         $user->delete();
 
-        return $this->showOne($user);
+        //return
+        return $this->showOne(collect(User::model($user)));
     }
 
     public function verify($token)

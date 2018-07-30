@@ -38,6 +38,7 @@ class Device extends Model
         'updated_at',
         'created_by',
         'updated_by',
+        'deleted_by',
     ];
 
     /**
@@ -45,7 +46,7 @@ class Device extends Model
      *
      * @var array
      */
-    protected $hidden = [];
+    protected $hidden = ['deleted_by', 'deleted_at'];
 
     //Functions
     public static function deviceLastSync($id){

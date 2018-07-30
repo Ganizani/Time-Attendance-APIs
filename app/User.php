@@ -69,6 +69,7 @@ class User extends Authenticatable
         'updated_at',
         'created_by',
         'updated_by',
+        'deleted_by',
     ];
 
     /**
@@ -77,7 +78,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password'
+        'password', 'deleted_by', 'deleted_at'
     ];
 
     //Functions

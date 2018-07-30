@@ -8,7 +8,10 @@
 
 namespace App\Http\Controllers\Department;
 use App\Department;
+use App\Device;
+use App\Holiday;
 use App\Http\Controllers\ApiController;
+use App\User;
 use Carbon\Carbon;
 use Validator;
 use Illuminate\Http\Request;
@@ -113,12 +116,22 @@ class DepartmentController extends ApiController
     /**
      * Remove the specified resource from storage.
      *
+     * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
         $department = Department::where('id', $id)->firstOrFail();
+        //check if group is used by users
+        if(User::where('department_id', $department->id)->count() > 0 ||
+            Device::where('department_id', $department->id)->count() > 0 ||
+            Holiday::where('department_id', $department->id)->count() > 0 ){
+            return $this->errorResponse("Please remove all Users/Devices/Holidays  in the department before delete department", 400);
+        }
+
+        $department->deleted_by = $request->user()->id;
+        $department->save();
         $department->delete();
 
         //return

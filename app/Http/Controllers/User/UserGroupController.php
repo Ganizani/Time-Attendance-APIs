@@ -9,6 +9,7 @@
 namespace App\Http\Controllers\User;
 use App\AccessControl;
 use App\Http\Controllers\ApiController;
+use App\User;
 use App\UserGroup;
 use Carbon\Carbon;
 use Validator;
@@ -127,15 +128,25 @@ class UserGroupController extends ApiController
     /**
      * Remove the specified resource from storage.
      *
+     * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request,$id)
     {
         $user_group = UserGroup::where('id', $id)->firstOrFail();
+
+        //check if group is used by users
+        if(User::where('user_type', $user_group->id)->count() > 0){
+            return $this->errorResponse("Please remove all users in the group before delete group", 400);
+        }
+
+        $user_group->deleted_by = $request->user()->id;
+        $user_group->save();
         $user_group->delete();
 
         //return
         return $this->showOne(collect(UserGroup::model($user_group)));
     }
+
 }

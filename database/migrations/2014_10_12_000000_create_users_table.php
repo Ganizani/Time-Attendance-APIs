@@ -49,6 +49,7 @@ class CreateUsersTable extends Migration
             $table->string('next_of_kin_id')->nullable(true);
             $table->string('created_by')->nullable(true);
             $table->string('updated_by')->nullable(true);
+            $table->string('deleted_by')->nullable(true);
             $table->string('email')->unique();
             $table->string('password');
             $table->timestamps();
@@ -59,6 +60,8 @@ class CreateUsersTable extends Migration
             //$table->foreign('spouse_id')->references('id')->on('spouses');
             //$table->foreign('address_id')->references('id')->on('addresses');
             //$table->foreign('next_of_kin_id')->references('id')->on('next_of_kins');
+            //$table->foreign('deleted_by')->references('id')->on('users');
+
 
         });
     }

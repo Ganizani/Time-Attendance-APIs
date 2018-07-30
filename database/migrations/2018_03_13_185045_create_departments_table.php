@@ -20,6 +20,7 @@ class CreateDepartmentsTable extends Migration
             $table->text('description')->nullable(true);
             $table->string('created_by')->nullable(true);
             $table->string('updated_by')->nullable(true);
+            $table->string('deleted_by')->nullable(true);
             $table->timestamps();
             $table->softDeletes();
 

@@ -108,15 +108,18 @@ class LeaveTypeController extends ApiController
     /**
      * Remove the specified resource from storage.
      *
+     * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
         $leave_type = LeaveType::where('id', $id)->firstOrFail();
+        $leave_type->deleted_by = $request->user()->id;
+        $leave_type->save();
         $leave_type->delete();
 
         //return
-        return $this->showList(collect(LeaveType::model($leave_type)));
+        return $this->showOne(collect(LeaveType::model($leave_type)));
     }
 }

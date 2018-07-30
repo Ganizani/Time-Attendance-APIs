@@ -19,6 +19,7 @@ class CreateUserGroupTable extends Migration
             $table->text('description')->nullable(true);
             $table->integer('created_by')->nullable(true);
             $table->integer('updated_by')->nullable(true);
+            $table->string('deleted_by')->nullable(true);
             $table->timestamps();
             $table->softDeletes();
 
