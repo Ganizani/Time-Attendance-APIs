@@ -94,16 +94,19 @@ class Handler extends ExceptionHandler
             return $this->errorResponse($message, $code);
         }
 
-        if($exception instanceof \ErrorException1){
+        if($exception instanceof \ErrorException){
             $message = $exception->getMessage();
-            $code    = 404;
+            $code    = 500;
 
             return $this->errorResponse($message, $code);
         }
 
+        if($exception instanceof \InvalidArgumentException){
+            $message = $exception->getMessage();
+            $code    = $exception->getCode();
 
-
-
+            return $this->errorResponse($message, 500);
+        }
 
         //Code for Handling any METHOD NOT FOUND HTTP Exception
         if($exception instanceof MethodNotAllowedHttpException){

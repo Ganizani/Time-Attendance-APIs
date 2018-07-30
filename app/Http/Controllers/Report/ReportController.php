@@ -55,6 +55,7 @@ class ReportController extends ApiController
         $dates = Helpers::getDatesArray($from, $to);
         $users = User::getUsers($request->department);
 
+
         foreach ($dates as $today){
             foreach ($users as $user_data) {
                 $count = Record::countClockingByIdDate($today, $user_data->id);
@@ -65,7 +66,7 @@ class ReportController extends ApiController
 
                     //check if filled in leaveData
                     $reason = null;
-                    if(count($leave_data) > 0){
+                    if(isset($leave_data)){
                         $reason = LeaveType::info($leave_data->leave_type);
                         $reason = $reason['name'];
                     }
