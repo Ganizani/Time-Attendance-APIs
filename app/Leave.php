@@ -55,13 +55,11 @@ class Leave extends Model
     //Functions
     public static function getLeaveByIdDate($user_id, $date){
 
-        $query = "SELECT l.* 
-                  FROM   leaves l
-                  WHERE  l.deleted_at IS NULL AND l.user_id = '{$user_id}' AND '{$date}' BETWEEN l.from_date AND l.to_date";
+        $leave = Leave::where('user_id', $user_id)
+            ->whereBetween('from_date', [$date, $date])
+            ->orWhereBetween("to_date",[$date, $date])->first();
 
-        $result = DB::select($query);
-
-        return (count($result) > 0) ? $result[0] : null;
+        return $leave;
     }
 
     public static function getLeaveTypes($leave_type){
