@@ -144,7 +144,11 @@ class Handler extends ExceptionHandler
             if($errorCode == 1451){
                 return $this->errorResponse("Cannot remove this resource permanently. It is related with other resources", 409);
             }
-            else return $this->errorResponse($exception->getMessage(), 500);
+            else {
+                $message =$exception->getMessage();
+                //$message = "An Internal server error occurred, please contact system administrator.";
+                return $this->errorResponse($message, 500);
+            }
         }
 
         //Code for Handling any other Token Missmatch Exception
