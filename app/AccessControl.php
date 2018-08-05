@@ -29,6 +29,8 @@ class AccessControl extends Model
         'login',
         'system_admin',
         'update_user_type',
+        'manual_clocking',
+        'apply_for_leave',
         'view_reports',
         'print_reports',
         'add_departments',
@@ -98,6 +100,8 @@ class AccessControl extends Model
         $access_control->system_admin        = (isset($data['system_admin']) && $data['system_admin'] != "") ? $data['system_admin'] : 0;
         $access_control->login               = (isset($data['login']) && $data['login'] != "") ? $data['login'] : 0;
         $access_control->update_user_type    = (isset($data['update_user_type']) && $data['update_user_type'] != "") ? $data['update_user_type'] : 0;
+        $access_control->manual_clocking     = (isset($data['manual_clocking']) && $data['manual_clocking'] != "") ? $data['manual_clocking'] : 0;
+        $access_control->apply_for_leave     = (isset($data['apply_for_leave']) && $data['apply_for_leave'] != "") ? $data['apply_for_leave'] : 0;
         //Report
         $access_control->view_reports        = (isset($data['view_reports'])   && $data['view_reports'] != "")   ? $data['view_reports']   : 0;
         $access_control->print_reports       = (isset($data['print_reports'])  && $data['print_reports'] != "")  ? $data['print_reports']  : 0;
@@ -144,7 +148,6 @@ class AccessControl extends Model
         $access_control->list_user_groups   = (isset($data['list_user_groups']) && $data['list_user_groups'] != "") ? $data['list_user_groups'] : 0;
         $access_control->delete_user_groups = (isset($data['delete_user_groups']) && $data['delete_user_groups'] != "") ? $data['delete_user_groups'] : 0;
 
-
         //Save
         $access_control->created_by = $request->user()->id;
         $access_control->updated_by = $request->user()->id;
@@ -161,6 +164,8 @@ class AccessControl extends Model
             'login'             => 'required|nullable',
             'system_admin'      => 'required|nullable',
             'update_user_type'   => 'required|nullable',
+            'manual_clocking'   => 'required|nullable',
+            'apply_for_leave'   => 'required|nullable',
             'view_reports'      => 'required|nullable',
             'print_reports'     => 'required|nullable',
             'add_departments'   => 'required|nullable',
@@ -209,6 +214,8 @@ class AccessControl extends Model
             'system_admin'      => 'required|nullable',
             'view_reports'      => 'required|nullable',
             'update_user_type'  => 'required|nullable',
+            'manual_clocking'   => 'required|nullable',
+            'apply_for_leave'   => 'required|nullable',
             'print_reports'     => 'required|nullable',
             'add_departments'   => 'required|nullable',
             'list_departments'  => 'required|nullable',
@@ -261,6 +268,8 @@ class AccessControl extends Model
             'login'             => $item->login,
             'system_admin'      => $item->system_admin,
             'update_user_type'  => $item->update_user_type,
+            'manual_clocking'   => $item->manual_clocking,
+            'apply_for_leave'   => $item->apply_for_leave,
             'view_reports'      => $item->view_reports,
             'print_reports'     => $item->print_reports,
             'add_departments'   => $item->add_departments,
@@ -311,6 +320,8 @@ class AccessControl extends Model
             'system_admin'      => $item->system_admin,
             'login'             => $item->login,
             'update_user_type'  => $item->update_user_type,
+            'manual_clocking'   => $item->manual_clocking,
+            'apply_for_leave'   => $item->apply_for_leave,
             'view_reports'      => $item->view_reports,
             'print_reports'     => $item->print_reports,
             'add_departments'   => $item->add_departments,

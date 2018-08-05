@@ -83,9 +83,9 @@ class Record extends Model
         return [
             'email'     => 'required|exists:users,email',
             'password'  => 'required',
-            'latitude'  => 'required',
-            'longitude' => 'required',
-            'status'    => 'required'
+            'latitude'  => 'required|nullable',
+            'longitude' => 'required|nullable',
+            'status'    => 'required|nullable'
         ];
     }
 

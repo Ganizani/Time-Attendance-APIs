@@ -20,6 +20,8 @@ class CreateAccessControlTable extends Migration
             $table->integer('system_admin')->nullable(true)->default(0);
             $table->integer('login')->nullable(true)->default(0);
             $table->integer('update_user_type')->nullable(true)->default(0);
+            $table->integer('manual_clocking')->nullable(true)->default(0);
+            $table->integer('apply_for_leave')->nullable(true)->default(0);
             //REPORTS
             $table->integer('view_reports')->nullable(true)->default(0);
             $table->integer('print_reports')->nullable(true)->default(0);
