@@ -15,6 +15,7 @@ use App\Http\Controllers\ApiController;
 use App\Leave;
 use App\Login;
 use App\NextOfKin;
+use App\Notifications\ForgotPasswordNotification;
 use App\PasswordReset;
 use App\Spouse;
 use App\User;
@@ -586,7 +587,7 @@ class UserController extends ApiController
 
         //Send Message
         $user = User::where('email', $request->email)->firstOrFail();
-        //$forgot_password->notify(new ForgotPasswordNotification($user));
+        $forgot_password->notify(new ForgotPasswordNotification($user, $forgot_password->token));
 
         return $this->showMessage("Password reset Link has been sent to {$request->email}, The link is valid for 24 Hours.", 200);
     }

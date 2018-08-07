@@ -96,7 +96,7 @@ class User extends Authenticatable
     }
 
     public static function generateVerificationToken(){
-        return str_random(55);
+        return str_random(65);
     }
 
     public static function isValidToken($token){
