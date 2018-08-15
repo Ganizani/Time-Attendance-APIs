@@ -157,6 +157,14 @@ class Handler extends ExceptionHandler
             return redirect()->back()->withInput($request-input());
         }
 
+        //Code for Handling Missing (DB) Connection
+        if($exception instanceof \Swift_TransportException){
+            //$message = $exception->getMessage();
+            $message = "Server/Node connection could not be established.";
+            return $this->errorResponse($message, 500);
+        }
+
+
         /*
          * Return full error message if in dev mode
          * if(config('app.debug')){
