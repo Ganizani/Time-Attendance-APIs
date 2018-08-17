@@ -161,7 +161,7 @@ class Handler extends ExceptionHandler
         if($exception instanceof \Swift_TransportException){
             //$message = $exception->getMessage();
             $message = "Server/Node connection could not be established.";
-            //return $this->errorResponse($message, 500);
+            return $this->errorResponse($message, 500);
         }
 
 
